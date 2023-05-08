@@ -8,41 +8,29 @@ const jwt = require('jsonwebtoken')
 //add movie
 const add_movie = async (req, res) => {
     try {
-        const token = req.headers.authorization
-        //verify token
-        const id = jwt.verify(token, 'ashish');
-        const user = await Users.findOne({
-            where: { email: id.email }
+        let movieschema = Joi.object().keys({
+            id: Joi.number(),
+            movie_name: Joi.string().required(),
+            release_date: Joi.string().required(),
+            genre: Joi.string().required(),
+            price: Joi.number().required(),
+            quantity: Joi.number().required(),
         })
-        if (user, user.role === 'admin') {
-            let movieschema = Joi.object().keys({
-                id: Joi.number(),
-                movie_name: Joi.string().required(),
-                release_date: Joi.string().required(),
-                genre: Joi.string().required(),
-                price: Joi.number().required(),
-                quantity: Joi.number().required(),
-            })
-            const error = movieschema.validate(req.body).error
-            if (error) {
-                return res.status(200).send({
-                    is_error: true,
-                    message: error.details[0].message
-                })
-            } else {
-                const movie = await Movies.create(req.body)
-                return res.status(201).send({
-                    is_error: false,
-                    message: 'user created',
-                    data: movie
-                })
-            }
-        } else {
-            return res.status(400).send({
+        const error = movieschema.validate(req.body).error
+        if (error) {
+            return res.status(200).send({
                 is_error: true,
-                message: 'user can not post movie'
+                message: error.details[0].message
+            })
+        } else {
+            const movie = await Movies.create(req.body)
+            return res.status(201).send({
+                is_error: false,
+                message: 'user created',
+                data: movie
             })
         }
+
 
     } catch (error) {
         console.log(error)
@@ -55,10 +43,12 @@ const add_movie = async (req, res) => {
 //get all movie
 const get_movie = async (req, res) => {
     try {
-        const movies = await Movies.findAll()
+        const movies = await Movies.findAll({
+            attributes: ['id', 'movie_name', 'release_date', 'genre', 'price', 'quantity']
+        })
         return res.status(200).send({
             is_error: false,
-            message: 'all movie',
+            message: 'all movie here',
             data: movies
         })
     } catch (error) {
@@ -80,6 +70,7 @@ const movieBy_id = async (req, res) => {
             })
         } else {
             const movie = await Movies.findOne({
+                attributes: ['id', 'movie_name', 'release_date', 'genre', 'price', 'quantity'],
                 where: {
                     id: id
                 }
@@ -103,6 +94,8 @@ const movieBy_id = async (req, res) => {
 const get_movieBy_serching = async (req, res) => {
     try {
         let search = req.params.search
+        console.log(search)
+
         if (!search) {
             return res.status(400).send({
                 is_error: true,
@@ -110,12 +103,16 @@ const get_movieBy_serching = async (req, res) => {
             })
         } else {
             const movie = await Movies.findAll({
+                attributes:['id','movie_name','release_date','genre','price','quantity'],
                 where: {
-                    movie_name: {
-                        [Op.like]: `%${search}%`
-                    }
-                }
+                    [Op.or]: [
+                        { movie_name: { [Op.iLike]: `${search}%` } },
+                        // {genre:{[Op.iLike]:`${search}`}}
+                      ]   
+                },
+                raw: true
             })
+            console.log(movie)
             if (!movie) {
                 return res.status(200).send({
                     is_error: false,
@@ -144,9 +141,9 @@ const edit_movie = async (req, res) => {
         const token = req.headers.authorization
         //token varify
         const id = jwt.verify(token, 'ashish');
-        const user = await Users.findOne({
-            where: { email: id.email }
-        })
+        // const user = await Users.findOne({
+        //     where: { email: id.email }
+        // })
         if (id.role === 'admin') {
             const id = req.params.id
             if (!id) {
@@ -163,7 +160,7 @@ const edit_movie = async (req, res) => {
                     price: Joi.number(),
                     quantity: Joi.number(),
                 })
-                const error = await movieschema.validate(req.body).error
+                const error = movieschema.validate(req.body).error
                 if (error) {
                     return res.status(200).send({
                         is_error: true,
@@ -203,10 +200,10 @@ const delete_movie = async (req, res) => {
         const token = req.headers.authorization
         //token varify
         const id = jwt.verify(token, 'ashish');
-        const user = await Users.findOne({
-            where: { email: id.email }
-        })
-        if (user, user.role === 'admin') {
+        // const user = await Users.findOne({
+        //     where: { email: id.email }
+        // })
+        if (id.role === 'admin') {
             const id = req.params.id
             if (!id) {
                 return res.status(400).send({

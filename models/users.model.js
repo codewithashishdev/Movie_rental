@@ -15,8 +15,7 @@ const Users = sq.define("Users", {
     },
     email: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
     password: {
         type: DataTypes.STRING,
@@ -24,8 +23,7 @@ const Users = sq.define("Users", {
     },
     contact_no: {
         type: DataTypes.BIGINT,
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
     address: {
         type: DataTypes.STRING,

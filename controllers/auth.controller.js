@@ -13,25 +13,53 @@ const signup = async (req, res) => {
         let userschema = Joi.object().keys({
             id: Joi.number(),
             name: Joi.string().required(),
-            email: Joi.string().email().required(),
+            email: Joi.string().email().required().custom(async (value, helpers) => {
+                const existingUser = await Users.findOne({ where: { email: value } });
+                if (existingUser) {
+                  return helpers.error('any.invalid');
+                }
+                return value;
+              }).messages({
+                'any.invalid': 'Email address is already taken'
+              }),
             password: Joi.string().required(),
-            contact_no: Joi.number().integer().required(),
+            contact_no: Joi.number().integer().required().custom(async (value, helpers) => {
+                const existingUser = await Users.findOne({ where: { contact_no: value } });
+                if (existingUser) {
+                  return helpers.error('any.invalid');
+                }
+                return value;
+              }).messages({
+                'any.invalid': 'Contact number is already taken'
+              })
+            ,
             address: Joi.string().required(),
-            role: Joi.string().required()
+            role: Joi.string().valid('customer', 'admin').required()
         })
         const error = userschema.validate(req.body).error
         if (error) {
             return res.status(200).send({
                 is_error: true,
+                statusCode: 406,
                 message: error.details[0].message
             })
         } else {
             //bcrypt password hash
             req.body.password = await bcrypt.hash(req.body.password, 10);
             //create user
-            const user = await Users.create(req.body)
+            await Users.create(req.body)
+            const user =await Users.findOne({
+                attributes :['name','email','role','contact_no','address'],
+                where: {
+                    email :req.body.email
+                },
+                raw :true
+            })
+            console.log(user)
+            // console.log(JSON.stringify(user))
             return res.status(201).send({
                 is_error: false,
+                statusCode:201,
                 message: 'user created',
                 data: user
             })
@@ -40,6 +68,7 @@ const signup = async (req, res) => {
         console.log(error)
         return res.status(401).send({
             is_error: true,
+            statusCode:401,
             message: 'Internal server error'
         })
     }
@@ -52,10 +81,11 @@ const login = async (req, res) => {
             email: Joi.string().email().required(),
             password: Joi.string().required()
         })
-        const error = await userschema.validate(req.body).error
+        const error = userschema.validate(req.body).error
         if (error) {
             return res.status(200).send({
                 is_error: true,
+                statusCode:406,
                 message: error.details[0].message
             })
         } else {
@@ -64,6 +94,7 @@ const login = async (req, res) => {
                     email: req.body.email
                 }
             })
+            console.log(req.body)
             //compare password
             const compare = await bcrypt.compare(req.body.password, user.password)
             if (compare) {
@@ -74,22 +105,31 @@ const login = async (req, res) => {
                         role: user.role,
                         id: user.id
                     },
-                     config.SECRET,
+                    config.SECRET,
                     {
                         expiresIn: "4h",
                     }
                 );
                 user.token = user;
+
+                const User = await Users.findOne({
+                    attributes :['name','email','role','contact_no','address'],
+                    where: {
+                        email: req.body.email
+                     }})
+
                 //lgoin response
                 return res.status(200).send({
                     is_error: false,
+                    statusCode:200,
                     message: 'login successfully',
-                    data: user,
+                    data: User,
                     token: token
                 })
             } else {
-                return res.status(400).send({
+                return res.status(200).send({
                     is_error: true,
+                    statusCode:403,
                     message: 'wrong password',
                     data: null,
                 })
@@ -99,6 +139,7 @@ const login = async (req, res) => {
         console.log(error)
         return res.status(401).send({
             is_error: true,
+            statusCode:401,
             message: 'Internal server error'
         })
     }
@@ -114,6 +155,7 @@ const forgotpassword = async (req, res) => {
         if (error) {
             return res.status(200).send({
                 is_error: true,
+                statusCode:406,
                 message: error.details[0].message
             })
         } else {
@@ -153,6 +195,7 @@ const forgotpassword = async (req, res) => {
             })
             return res.status(200).send({
                 is_error: false,
+                statusCode:200,
                 message: 'Otp sended',
                 Otp: otp
             })
@@ -161,6 +204,7 @@ const forgotpassword = async (req, res) => {
         console.log(error)
         return res.status(401).send({
             is_error: true,
+            statusCode:401,
             message: 'Internal server error'
         })
     }
@@ -178,6 +222,7 @@ const resetpassword = async (req, res) => {
         if (error) {
             return res.status(200).send({
                 is_error: true,
+                statuscode:404,
                 message: error.details[0].message
             })
         } else {
@@ -189,6 +234,7 @@ const resetpassword = async (req, res) => {
             if (!user) {
                 return res.status(400).send({
                     is_error: false,
+                    statusCode:404,
                     message: 'user is not exist',
                 })
             } else {
@@ -200,13 +246,15 @@ const resetpassword = async (req, res) => {
                             email: req.body.email
                         }
                     })
-                    return res.status(400).send({
+                    return res.status(200).send({
                         is_error: false,
+                        statusCode:200,
                         message: 'password changed '
                     })
                 } else {
                     return res.status(400).send({
                         is_error: false,
+                        statusCode:404 ,
                         message: 'Otp is not match'
                     })
                 }
@@ -216,6 +264,7 @@ const resetpassword = async (req, res) => {
         console.log(error)
         return res.status(401).send({
             is_error: true,
+            statusCode:401,
             message: 'Internal server error'
         })
     }

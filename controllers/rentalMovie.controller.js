@@ -1,6 +1,7 @@
 const Movie_Rental = require('../models/rentalMovie.model')
 const Movies = require('../models/movie.model')
 const Joi = require('joi')
+const {Op} = require('sequelize')
 const Users = require('../models/users.model')
 const jwt = require('jsonwebtoken')
 const Sequelize = require('sequelize')
@@ -9,30 +10,10 @@ const Sequelize = require('sequelize')
 //rentel movie
 const rental_movie = async (req, res) => {
     try {
-
-        // console.log("get user")
-        if (!req.headers.authorization) {
-            return res.status(401).json(
-                {
-                    error: "Not Authorized"
-                });
-        }
-        const token = req.headers.authorization
-
-        const id = jwt.verify(token, 'ashish');
-        // console.log(id)
-        const user = await Users.findOne({
-            where: { email: id.email }
-        })
-        // console.log(JSON.stringify(user))
-        // console.log('+++++++', user.role)
-        if (user.role === 'customer') {
-
             let movieschema = Joi.object().keys({
-                user_id: Joi.number().required(),
                 Movie_id: Joi.number().required(),
-                Day_of_rent: Joi.number().required(),
-                Day_till_rent: Joi.number().required(),
+                Day_of_rent: Joi.string().required(),
+                Day_till_rent: Joi.string().required(),
                 is_returned: Joi.boolean(),
             })
             // console.log('error')
@@ -44,6 +25,10 @@ const rental_movie = async (req, res) => {
                     message: error.details[0].message
                 })
             } else {
+                // console.log( req.id.id)
+                 req.body.user_id = req.id.id
+                //  console.log( req.user_id)
+
                 const movie_rentel = await Movie_Rental.create(req.body)
                 const id = JSON.stringify(movie_rentel.Movie_id)
                 // quantity minus in this movie
@@ -63,12 +48,6 @@ const rental_movie = async (req, res) => {
                 })
 
             }
-        } else {
-            return res.status(400).send({
-                is_error: true,
-                message: 'admin can not rentel movie'
-            })
-        }
     } catch (error) {
         console.log(error)
         return res.status(400).send({
@@ -81,19 +60,10 @@ const rental_movie = async (req, res) => {
 //return movie
 const return_movie = async (req, res) => {
     try {
-        const token = req.headers.authorization
-        //token varify
-        const id = jwt.verify(token, 'ashish');
-        console.log(id)
-        const user = await Users.findOne({
-            where: { email: id.email }
-        })
-        if (user.role === 'customer') {
             let movieschema = Joi.object().keys({
-                user_id: Joi.number().required(),
                 Movie_id: Joi.number().required(),
-                Day_of_rent: Joi.number().required(),
-                Day_till_rent: Joi.number().required(),
+                Day_of_rent: Joi.string().required(),
+                Day_till_rent: Joi.string().required(),
                 is_returned: Joi.boolean(),
             })
             const error = movieschema.validate(req.body).error
@@ -104,9 +74,22 @@ const return_movie = async (req, res) => {
                     message: error.details[0].message
                 })
             } else {
-                const movie_rentel = await Movie_Rental.create(req.body)
+                console.log(req.id.id)
+                req.body.user_id = req.id.id
+                const movie_rentel = await Movie_Rental.update({is_returned:true},
+                {where:{
+                    Movie_id:req.body.Movie_id
+                }})
+                const movie_rentelID = await Movie_Rental.findOne({
+                    where:{
+                        [Op.or]: [
+                            { Movie_id: req.body.Movie_id,
+                             user_id: req.id.id  }
+                          ]
+                    }
+                })
                 // quantity minus in this movie
-                const id = JSON.stringify(movie_rentel.Movie_id)
+                const id = JSON.stringify(movie_rentelID.Movie_id)
                 const movie = Movies.update({
                     quantity: Sequelize.literal('quantity + 1')
                 },
@@ -119,12 +102,6 @@ const return_movie = async (req, res) => {
                     data: movie_rentel,
                 })
             }
-        } else {
-            return res.status(400).send({
-                is_error: true,
-                message: 'admin can not return movie'
-            })
-        }
     } catch (error) {
         console.log(error)
         return res.status(400).send({

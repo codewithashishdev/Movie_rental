@@ -1,62 +1,82 @@
 const jwt = require('jsonwebtoken')
 const config = require('../config/database')
+
 //moddleware for after authentication
 const authentication = async(req, res, next) => {
 
     let token = req.headers.authorization
-    // console.log('middlerware is working')
+    console.log(token)
     if (!token) {
         return res.status(400).send({
             is_error: true,
-            message: 'token require',
+            message: 'sorry, You have no token',
         })
     } else {
-        //verify token
-        const decodes = jwt.verify(token, config.SECRET,
-            (err) => {
-                if (err) { () => console.log(err) }
-            })
-        req.id = decodes
+      const varify = jwt.verify(token,config.SECRET)
+      if(varify){
+        req.id = varify
         next()
-    }
-
-}
-
-const adminauthentication = async (req, res, next) => {
-try {
-    console.log('+++++++++++++++++++',value)
-    console.log('+++++++++++++++++++',req)
-
-    let token = req.headers.authorization
-    console.log('+++++++++++++++++++token',token)
-
-    if (!token) {
-        return res.status(400).send({
+      }else{
+        return res.status(200).send({
             is_error: true,
-            message: 'token require',
+            message: 'something went wrong',
         })
-    } else {
-    console.log('++++++++++++++++else')
-
-        const decode = await jwt.verify(token, config.SECRET)
-        console.log(decode)
-        if (decode, decode.role === value) {
-             res.send({
-                role :value
-            })
-            next()
-        }
+      }
     }
-} catch (error) {
-    console.log(error)
-    return res.status(401).send({
-        is_error:true,
-        error: error 
-    })
+
 }
+//for admin token varification
+const adminmiddleware = async(req,res,next) => {
+      const token = req.headers.authorization
+    //   console.log(token)
+      if(!token){
+         return res.status(200).send({
+            is_error:true,
+            message: 'sorry, You have no token'
+         })
+      }else{
+        const varify = jwt.verify(token,config.SECRET)
+        console.log(varify.role)
+        if(varify.role==="admin"){
+            next()
+            return 
+        }else{
+            return res.status(200).send({
+                is_error :true,
+                message: 'customer have not permission'
+            })
+        }
+      }
+}
+
+//for customer middleware
+const customermiddleware =async(req,res,next) =>{
+    const token = req.headers.authorization
+    //   console.log(token)
+      if(!token){
+         return res.status(200).send({
+            is_error:true,
+            message: 'sorry, You have no token'
+         })
+      }else{
+        const varify = jwt.verify(token,config.SECRET)
+        console.log(varify.role)
+        if(varify.role==="customer"){
+            req.id = varify
+            console.log(req.id.id)
+            next()
+            return 
+        }else{
+            return res.status(200).send({
+                is_error :true,
+                message: 'admin not rented and return movie '
+            })
+        }
+      }
 }
 
 module.exports = {
     authentication,
-    adminauthentication
+    adminmiddleware,
+    customermiddleware
 }

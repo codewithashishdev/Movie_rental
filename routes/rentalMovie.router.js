@@ -6,9 +6,9 @@ const router = express.Router();
 /* rentel_movie page. */
 
 // movie rental 
-router.post('/rentel',Middleware.authentication,movieRentelController.rental_movie)
+router.post('/rentel',Middleware.customermiddleware,movieRentelController.rental_movie)
 
 //movie return
-router.post('/return',Middleware.authentication,movieRentelController.return_movie)
+router.post('/return',Middleware.customermiddleware,movieRentelController.return_movie)
 
 module.exports = router;

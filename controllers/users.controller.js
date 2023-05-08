@@ -5,19 +5,13 @@ const Joi = require('joi')
 //get user
 const get_user = async (req, res) => {
     try {
-
-        console.log("get user")
-        if (!req.headers.authorization) {
-            return res.status(401).json({ error: "Not Authorized" });
-        }
-        const token = req.headers.authorization
-
-        const id = jwt.verify(token, 'ashish');
-        console.log(id)
+        // console.log(req.id)
         const user = await Users.findOne({
-            where: { email: id.email }
-        })
-
+            attributes: ['name', 'email', 'contact_no', 'address', 'role'],
+            where: {
+                email: req.id.email
+            }
+        });
         return res.status(200).send({
             is_login: true,
             message: 'get user',
@@ -35,22 +29,11 @@ const get_user = async (req, res) => {
 //edit user
 const edit_user = async (req, res) => {
     try {
-        // console.log("get user")
-        if (!req.headers.authorization) {
-            return res.status(401).json(
-                {
-                    error: "Not Authorized"
-                });
-        }
-        const token = req.headers.authorization
-
-        const id = jwt.verify(token, 'ashish');
-        // console.log('id----',id)
-        // console.log('+++')
+        console.log(req.id)
         const user = await Users.findOne({
-            where: { email: id.email }
+            where: { email: req.id.email }
         })
-        // console.log('+++')
+
         if (user) {
             let userschema = Joi.object().keys({
                 name: Joi.string(),
@@ -65,9 +48,8 @@ const edit_user = async (req, res) => {
                     message: error.details[0].message
                 })
             } else {
-                // console.log('++++++')
-                const user = await Users.update(req.body, {
-                    where: { email: id.email }
+                await Users.update(req.body, {
+                    where: { email: req.id.email }
                 })
                 return res.status(200).send({
                     is_error: false,
@@ -88,20 +70,16 @@ const edit_user = async (req, res) => {
 //delete user
 const delete_user = async (req, res) => {
     try {
-        const token = req.headers.authorization
-        //varify token
-        const id = jwt.verify(token, 'ashish');
-        //delete user from databases
-        const user = await Users.destroy({
+        console.log(req.id)
+        await Users.destroy({
             where: {
-                email: id.email
+                email: req.id.email
             },
             force: true
         });
         return res.status(200).send({
             is_login: true,
             message: 'your user is deleted successfully',
-            data: user
         })
     } catch (error) {
         console.log(error)

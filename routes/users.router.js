@@ -17,12 +17,7 @@ router.put('/', Middleware.authentication ,UserController.edit_user)
 router.delete('/',Middleware.authentication,UserController.delete_user)
 
 //all information 
-router.get('/allinformation',Middleware.authentication,adminController.all_information)
+router.get('/movies',Middleware.adminmiddleware,adminController.all_information)
 
-// which  user have perticular movie
-router.get('/moviestoke',Middleware.authentication,adminController.moviestoke)
-
-
-router.get('/this',Middleware.adminauthentication,adminController.moviestoke)
 
 module.exports = router;

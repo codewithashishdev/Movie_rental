@@ -13,7 +13,7 @@ const Movie = sq.define("Movie", {
         allowNull: false,
     },
     release_date: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
     },
     genre: {

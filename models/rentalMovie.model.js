@@ -14,11 +14,11 @@ const Rented_Movie = sq.define("Rented_Movie", {
         ForeignKey: true
     },
     Day_of_rent: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DATEONLY,
         allowNull: false,
     },
     Day_till_rent: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DATEONLY,
         allowNull: false,
     },
     is_returned: {
