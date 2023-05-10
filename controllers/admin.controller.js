@@ -32,11 +32,10 @@ const all_information = async (req, res) => {
             })
     } catch (error) {
         console.log(error)
-        return res.status(401).send({
+        return res.status(500).send({
             is_error: true,
-            error: error,
-            status: 400,
-            message: 'not found',
+            status: 500,
+            message: 'Internal server error',
             data: null
         })
     }

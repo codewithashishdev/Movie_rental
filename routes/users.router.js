@@ -19,5 +19,7 @@ router.delete('/',Middleware.authentication,UserController.delete_user)
 //all information 
 router.get('/movies',Middleware.adminmiddleware,adminController.all_information)
 
+//logout api
+router.get('/logout',Middleware.authentication,UserController.logout)
 
 module.exports = router;

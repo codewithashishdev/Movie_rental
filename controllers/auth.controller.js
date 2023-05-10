@@ -7,32 +7,16 @@ const { Sequelize } = require('sequelize')
 const otpGenerator = require('otp-generator');
 const config = require('../config/database')
 
+
 //signup controller
 const signup = async (req, res) => {
     try {
         let userschema = Joi.object().keys({
             id: Joi.number(),
             name: Joi.string().required(),
-            email: Joi.string().email().required().custom(async (value, helpers) => {
-                const existingUser = await Users.findOne({ where: { email: value } });
-                if (existingUser) {
-                  return helpers.error('any.invalid');
-                }
-                return value;
-              }).messages({
-                'any.invalid': 'Email address is already taken'
-              }),
+            email: Joi.string().email().required(),
             password: Joi.string().required(),
-            contact_no: Joi.number().integer().required().custom(async (value, helpers) => {
-                const existingUser = await Users.findOne({ where: { contact_no: value } });
-                if (existingUser) {
-                  return helpers.error('any.invalid');
-                }
-                return value;
-              }).messages({
-                'any.invalid': 'Contact number is already taken'
-              })
-            ,
+            contact_no: Joi.number().integer().required(),
             address: Joi.string().required(),
             role: Joi.string().valid('customer', 'admin').required()
         })
@@ -66,9 +50,9 @@ const signup = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        return res.status(401).send({
+        return res.status(500).send({
             is_error: true,
-            statusCode:401,
+            statusCode:500,
             message: 'Internal server error'
         })
     }
@@ -76,6 +60,7 @@ const signup = async (req, res) => {
 
 //login controller
 const login = async (req, res) => {
+    console.log('jai ho gandhi ji')
     try {
         let userschema = Joi.object().keys({
             email: Joi.string().email().required(),
@@ -137,9 +122,9 @@ const login = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        return res.status(401).send({
+        return res.status(500).send({
             is_error: true,
-            statusCode:401,
+            statusCode:500,
             message: 'Internal server error'
         })
     }
@@ -202,9 +187,9 @@ const forgotpassword = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        return res.status(401).send({
+        return res.status(500).send({
             is_error: true,
-            statusCode:401,
+            statusCode:500,
             message: 'Internal server error'
         })
     }
@@ -262,17 +247,47 @@ const resetpassword = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        return res.status(401).send({
+        return res.status(500).send({
             is_error: true,
-            statusCode:401,
+            statusCode:500,
             message: 'Internal server error'
         })
     }
 }
 
+//google login 
+const callback = async(req,res)=>{
+        const { email } = req.user._json;
+        console.log(email)
+        res.send({
+            
+        })
+}
+
+
 module.exports = {
     signup,
     login,
+    callback,
     forgotpassword,
     resetpassword
 }
+
+// .custom(async (value, helpers) => {
+//     const existingUser = await Users.findOne({ where: { contact_no: value } });
+//     if (existingUser) {
+//       return helpers.error('any.invalid');
+//     }
+//     return value;
+//   }).messages({
+//     'any.invalid': 'Contact number is already taken'
+//   })
+// .custom(async (value, helpers) => {
+//     const existingUser = await Users.findOne({ where: { email: value } });
+//     if (existingUser) {
+//       return helpers.error('any.invalid');
+//     }
+//     return value;
+//   }).messages({
+//     'any.invalid': 'Email address is already taken'
+//   })

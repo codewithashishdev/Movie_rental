@@ -34,9 +34,9 @@ const add_movie = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        return res.status(400).send({
+        return res.status(500).send({
             is_error: true,
-            message: 'token error'
+            message: 'Internal server error'
         })
     }
 }
@@ -53,9 +53,9 @@ const get_movie = async (req, res) => {
         })
     } catch (error) {
         console.log(error)
-        return res.status(400).send({
+        return res.status(500).send({
             is_error: true,
-            message: 'token error'
+            message: 'Internal server error'
         })
     }
 }
@@ -64,7 +64,7 @@ const movieBy_id = async (req, res) => {
     try {
         id = req.params.id
         if (!id) {
-            return res.status(400).send({
+            return res.status(500).send({
                 is_error: true,
                 message: 'id is require'
             })
@@ -83,9 +83,9 @@ const movieBy_id = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        return res.status(400).send({
+        return res.status(500).send({
             is_error: true,
-            message: 'token error'
+            message: 'Internal server error'
         })
     }
 }
@@ -97,7 +97,7 @@ const get_movieBy_serching = async (req, res) => {
         console.log(search)
 
         if (!search) {
-            return res.status(400).send({
+            return res.status(500).send({
                 is_error: true,
                 message: 'Enter value'
             })
@@ -128,7 +128,7 @@ const get_movieBy_serching = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        res.status(400).send({
+        res.status(500).send({
             is_error: true,
             message: 'data is not get'
         })
@@ -147,7 +147,7 @@ const edit_movie = async (req, res) => {
         if (id.role === 'admin') {
             const id = req.params.id
             if (!id) {
-                return res.status(400).send({
+                return res.status(500).send({
                     is_error: true,
                     message: 'id is require'
                 })
@@ -180,16 +180,16 @@ const edit_movie = async (req, res) => {
                 }
             }
         } else {
-            return res.status(400).send({
+            return res.status(500).send({
                 is_error: true,
                 message: 'user can not edit movie'
             })
         }
     } catch (error) {
         console.log(error)
-        return res.status(400).send({
+        return res.status(500).send({
             is_error: true,
-            message: 'token error'
+            message: 'Internal server error'
         })
     }
 }
@@ -206,7 +206,7 @@ const delete_movie = async (req, res) => {
         if (id.role === 'admin') {
             const id = req.params.id
             if (!id) {
-                return res.status(400).send({
+                return res.status(500).send({
                     is_error: true,
                     message: 'id is require'
                 })
@@ -223,16 +223,16 @@ const delete_movie = async (req, res) => {
                 })
             }
         } else {
-            return res.status(400).send({
+            return res.status(500).send({
                 is_error: true,
                 message: 'user can not delete movie'
             })
         }
     } catch (error) {
         console.log(error)
-        return res.status(400).send({
+        return res.status(500).send({
             is_error: true,
-            message: 'token error'
+            message: 'Internal server error'
         })
     }
 }

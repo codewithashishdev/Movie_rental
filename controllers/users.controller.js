@@ -2,6 +2,7 @@ const Users = require("../models/users.model")
 const jwt = require('jsonwebtoken')
 const Joi = require('joi')
 
+
 //get user
 const get_user = async (req, res) => {
     try {
@@ -62,7 +63,7 @@ const edit_user = async (req, res) => {
         console.log(error)
         return res.status(400).send({
             is_error: true,
-            message: 'token error'
+            message: ''
         })
     }
 }
@@ -89,8 +90,25 @@ const delete_user = async (req, res) => {
         })
     }
 }
+
+//logout api
+const logout = async(req,res) =>{
+try {
+    return res.status(200).send({
+        message:'logout successfully'
+    })
+} catch (error) {
+    console.log(error)
+    return res.status(400).send({
+        is_error: true,
+        message: 'token error'
+    })
+}
+}
+
 module.exports = {
     get_user,
     edit_user,
-    delete_user
+    delete_user,
+    logout
 }

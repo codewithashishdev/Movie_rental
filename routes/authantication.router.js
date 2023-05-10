@@ -4,11 +4,13 @@ const loginController = require('../controllers/auth.controller')
 
 /* authenticaation page. */
 
+
 //signup api
 router.post('/signup',loginController.signup)
 
 //login api
 router.post('/login',loginController.login)
+
 
 //forgotpassword api
 router.post('/forgotpassword',loginController.forgotpassword)
