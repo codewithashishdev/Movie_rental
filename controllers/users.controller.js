@@ -1,6 +1,7 @@
 const Users = require("../models/users.model")
 const jwt = require('jsonwebtoken')
 const Joi = require('joi')
+const { validationupdateUser } = require('../validation/userValidation')
 
 
 //get user
@@ -36,13 +37,7 @@ const edit_user = async (req, res) => {
         })
 
         if (user) {
-            let userschema = Joi.object().keys({
-                name: Joi.string(),
-                email: Joi.string().email(),
-                contact_no: Joi.number().integer(),
-                address: Joi.string()
-            })
-            const error = userschema.validate(req.body).error
+            const { error } = validationupdateUser(req.body)
             if (error) {
                 return res.status(400).send({
                     is_error: true,
@@ -92,18 +87,18 @@ const delete_user = async (req, res) => {
 }
 
 //logout api
-const logout = async(req,res) =>{
-try {
-    return res.status(200).send({
-        message:'logout successfully'
-    })
-} catch (error) {
-    console.log(error)
-    return res.status(400).send({
-        is_error: true,
-        message: 'token error'
-    })
-}
+const logout = async (req, res) => {
+    try {
+        return res.status(200).send({
+            message: 'logout successfully'
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send({
+            is_error: true,
+            message: 'token error'
+        })
+    }
 }
 
 module.exports = {

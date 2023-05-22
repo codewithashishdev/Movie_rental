@@ -4,33 +4,28 @@ const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken')
 const Users = require('../models/users.model')
-// const googleuser = require('../models/google.user.model')
 const { Sequelize } = require('sequelize')
 const otpGenerator = require('otp-generator');
 const config = require('../config/database')
 const cron = require('node-cron');
 const twilio = require('twilio');
+const { validateSignup,
+    validateLogin,
+    validateForgotpassword,
+    validateResetpassword
+} = require('../validation/userValidation')
 
 
 //signup controller
 const signup = async (req, res) => {
     try {
-        let userschema = Joi.object().keys({
-            id: Joi.number(),
-            name: Joi.string().required(),
-            email: Joi.string().email().required(),
-            password: Joi.string().required(),
-            contact_no: Joi.number().integer().required(),
-            address: Joi.string().required(),
-            role: Joi.string().valid('customer', 'admin').required()
-        })
         const existingUser = await Users.findOne({
             where: {
                 email: req.body.email
             }
         })
         if (!existingUser) {
-            const error = userschema.validate(req.body).error
+            const { error } = validateSignup(req.body)
             if (error) {
                 return res.status(200).send({
                     is_error: true,
@@ -79,14 +74,9 @@ const signup = async (req, res) => {
 
 //login controller
 const login = async (req, res) => {
-    console.log('jai ho gandhi ji')
     console.log(req.body)
     try {
-        let userschema = Joi.object().keys({
-            email: Joi.string().email().required(),
-            password: Joi.string().required()
-        })
-        const error = userschema.validate(req.body).error
+        const { error } = validateLogin(req.body)
         if (error) {
             return res.status(200).send({
                 is_error: true,
@@ -209,10 +199,7 @@ const forgotpasswordMoible = async (req, res) => {
 //forgotpassword controller
 const forgotpassword = async (req, res) => {
     try {
-        let userschema = Joi.object().keys({
-            email: Joi.string().email().required()
-        })
-        const error = userschema.validate(req.body).error
+        const { error } = validateForgotpassword(req.body)
         if (error) {
             return res.status(200).send({
                 is_error: true,
@@ -285,12 +272,7 @@ const forgotpassword = async (req, res) => {
 //reset password controller
 const resetpassword = async (req, res) => {
     try {
-        let userschema = Joi.object().keys({
-            email: Joi.string().email().required(),
-            otp: Joi.string().required(),
-            new_password: Joi.number().required()
-        })
-        const error = userschema.validate(req.body).error
+        const { error } = validateResetpassword(req.body)
         if (error) {
             return res.status(200).send({
                 is_error: true,
@@ -375,21 +357,10 @@ const google_user = async (req, res) => {
             });
             console.log('New user created:', newUser);
         }
-
-        // res.send({
-        //     data:{
-        //         name: name,
-        //         contact_no: 2,
-        //         role: 'customer',
-        //         address: '',
-        //         accessToken: accessToken
-        //     }
-        // })
-        // Redirect or send response to the client
-        res.redirect('/api/Dashboard'); // Redirect to the specified success URL
+        res.redirect('/api/Dashboard')
     } catch (error) {
         console.error('Error processing Google authentication callback:', error);
-        res.redirect('/login'); // Redirect to the specified failure URL
+        res.redirect('/login');
     }
 }
 
@@ -443,13 +414,13 @@ const dashboard = async (req, res) => {
     }
 }
 
-const cronJob = async () => { 
-   try {
-    cron.schedule('*/10 * * * * *', dashboard(req,res));
-   } catch (error) {
-    console.log(error)
-   }
- }
+const cronJob = async () => {
+    try {
+        cron.schedule('*/10 * * * * *', dashboard(req, res));
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
 const Dashboard = async () => {
@@ -462,9 +433,6 @@ const Dashboard = async () => {
     }
 }
 
-//send all user mail
-// authController.mail_sender()
-
 module.exports = {
     signup,
     login,
@@ -473,26 +441,6 @@ module.exports = {
     resetpassword,
     google_user,
     dashboard,
-    cronJob
-    // Dashboard,
-    // mail_sender
+    cronJob,
+    Dashboard
 }
-
-// .custom(async (value, helpers) => {
-//     const existingUser = await Users.findOne({ where: { contact_no: value } });
-//     if (existingUser) {
-//       return helpers.error('any.invalid');
-//     }
-//     return value;
-//   }).messages({
-//     'any.invalid': 'Contact number is already taken'
-//   })
-// .custom(async (value, helpers) => {
-//     const existingUser = await Users.findOne({ where: { email: value } });
-//     if (existingUser) {
-//       return helpers.error('any.invalid');
-//     }
-//     return value;
-//   }).messages({
-//     'any.invalid': 'Email address is already taken'
-//   })

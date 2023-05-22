@@ -20,6 +20,7 @@
     "google-auth-library": "^8.8.0",
     "googleapis": "^118.0.0",
     "helmet": "^7.0.0",
+    "http": "^0.0.1-security",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.0",
     "morgan": "~1.9.1",

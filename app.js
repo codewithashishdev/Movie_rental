@@ -1,6 +1,7 @@
 require('dotenv').config()
 // Import required modules
 const express = require('express')
+const http = require('http')
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -9,7 +10,7 @@ const multer = require('multer')
 const passport = require('passport')
 const path = require('path');
 const app = express(); // Express app
-const cron = require('./cron.js')
+// const cron = require('./cron.js')
 const socketIO = require('socket.io');
 //router files
 const usersRouter = require('./routes/users.router');
@@ -17,7 +18,7 @@ const authRouter = require('./routes/authantication.router')
 const movieRouter = require('./routes/movie.router')
 const movieRentalRouter = require('./routes/rentalMovie.router')
 const googleRouter = require('./routes/google.auth.router')
-const authController = require('./controllers/auth.controller.js');
+// const authController = require('./controllers/auth.controller.js');
 
 // middleware  Set up
 app.use(morgan('dev')); // Logging middleware
@@ -29,6 +30,16 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bo
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'YOUR_SESSION_SECRET', resave: false, saveUninitialized: false }));
 
+
+//
+let server = http.createServer(app)
+let io = socketIO(server)
+
+
+io.on('connection', (socket) => {
+  console.log('user is connected!');
+
+});
 
 // Initialize Passport and restore authentication state, if any, from the session
 app.use(passport.initialize());
@@ -51,11 +62,11 @@ const errhandler = (err, req, res, next) => {
 }
 app.use(errhandler)
 // cron.sendmailAlluser
-authController.cronJob()
+// authController.cronJob()
 
 // Start the server
 const port = process.env.SERVER_PORT || 3000
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
