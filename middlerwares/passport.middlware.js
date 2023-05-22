@@ -1,11 +1,10 @@
-const express = require('express');
-const router = express.Router();
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { google } = require('googleapis');
 const { OAuth2 } = google.auth;
 const authController = require('../controllers/auth.controller')
 
+// console.log( process.env.GOOGLE_CALLBACK_URL)
 //google strategy
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -30,13 +29,6 @@ passport.deserializeUser(function (user, cb) {
     });
 });
 
-//google auth url
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email', 'https://mail.google.com/'] }));
-
-//google auth callback url
-router.get('/auth/google/callback', passport.authenticate('google'), authController.google_user);
-
-//eamil in google auth
-router.get('/Dashboard', authController.dashboard)
-
-module.exports = router
+module.exports = {
+    passport
+}

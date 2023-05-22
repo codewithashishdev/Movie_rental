@@ -21,6 +21,10 @@ const Movie = sq.define("Movie", {
         allowNull: false,
         values: ["Action", 'Drama', 'Horror', 'Thriller', 'Science fiction']
     },
+    movie_title:{
+        type: DataTypes.STRING,
+        allowNull: false,
+        },
     price: {
         type: DataTypes.INTEGER,
         allowNull: false,

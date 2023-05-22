@@ -33,7 +33,7 @@ Rented_Movie.sync().then(() => {
 });
 
 //for iclude rented_movie to movie
-Movie.hasMany(Rented_Movie, { foreignKey: 'Movie_id' });
+Movie.hasMany(Rented_Movie, { foreignKey: 'id' });
 Rented_Movie.belongsTo(Movie, { foreignKey: 'Movie_id' });
 
 module.exports = Rented_Movie;

@@ -23,15 +23,15 @@ const add_movie = async (req, res) => {
                 message: error.details[0].message
             })
         } else {
-            const movie = await Movies.create(req.body)
+            const data = req.body
+            data.movie_title = `${process.env.URL}/movie/Movie_title/${req.file.filename}`
+            const movie = await Movies.create(data)
             return res.status(201).send({
                 is_error: false,
-                message: 'user created',
+                message: 'movie created',
                 data: movie
             })
         }
-
-
     } catch (error) {
         console.log(error)
         return res.status(500).send({
@@ -40,11 +40,13 @@ const add_movie = async (req, res) => {
         })
     }
 }
+
+
 //get all movie
 const get_movie = async (req, res) => {
     try {
         const movies = await Movies.findAll({
-            attributes: ['id', 'movie_name', 'release_date', 'genre', 'price', 'quantity']
+            attributes: ['id', 'movie_name', 'release_date', 'genre', 'price', 'quantity','movie_title']
         })
         return res.status(200).send({
             is_error: false,
@@ -70,7 +72,7 @@ const movieBy_id = async (req, res) => {
             })
         } else {
             const movie = await Movies.findOne({
-                attributes: ['id', 'movie_name', 'release_date', 'genre', 'price', 'quantity'],
+                attributes: ['id', 'movie_name', 'release_date', 'genre', 'price', 'quantity','movie_title'],
                 where: {
                     id: id
                 }
@@ -103,12 +105,12 @@ const get_movieBy_serching = async (req, res) => {
             })
         } else {
             const movie = await Movies.findAll({
-                attributes:['id','movie_name','release_date','genre','price','quantity'],
+                attributes: ['id', 'movie_name', 'release_date', 'genre', 'price', 'quantity','movie_title'],
                 where: {
                     [Op.or]: [
                         { movie_name: { [Op.iLike]: `${search}%` } },
                         // {genre:{[Op.iLike]:`${search}`}}
-                      ]   
+                    ]
                 },
                 raw: true
             })
@@ -197,37 +199,17 @@ const edit_movie = async (req, res) => {
 //delete movie
 const delete_movie = async (req, res) => {
     try {
-        const token = req.headers.authorization
-        //token varify
-        const id = jwt.verify(token, 'ashish');
-        // const user = await Users.findOne({
-        //     where: { email: id.email }
-        // })
-        if (id.role === 'admin') {
-            const id = req.params.id
-            if (!id) {
-                return res.status(500).send({
-                    is_error: true,
-                    message: 'id is require'
-                })
-            } else {
-                const movie = await Movies.destroy({
-                    where: {
-                        id: req.params.id
-                    }
-                })
-                return res.status(200).send({
-                    is_error: false,
-                    message: 'movie deleted',
-                    data: movie
-                })
+        const movie = await Movies.destroy({
+            where: {
+                id: req.params.id
             }
-        } else {
-            return res.status(500).send({
-                is_error: true,
-                message: 'user can not delete movie'
-            })
-        }
+        })
+        return res.status(200).send({
+            is_error: false,
+            message: 'movie deleted',
+            data: movie
+        })
+
     } catch (error) {
         console.log(error)
         return res.status(500).send({
@@ -245,3 +227,14 @@ module.exports = {
     edit_movie,
     delete_movie
 }
+
+
+
+       // if(req.file){
+        //      console.log({
+        //         success: true,
+        //         movie_title :  `${process.env.URL}/movie/Movie_title/${req.file.filename}`,
+        //     })
+        // }
+        // console.log(req.file)
+        // console.log(req.body)

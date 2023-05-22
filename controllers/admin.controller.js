@@ -14,6 +14,8 @@ const all_information = async (req, res) => {
                 include: [
                     {
                         model: rental_movie,
+
+                        
                         attributes:['Day_of_rent','Day_till_rent'],
                         where:{
                         is_returned :false

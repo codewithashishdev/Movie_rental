@@ -37,6 +37,15 @@ const Users = sq.define("Users", {
     otp: {
         type: DataTypes.STRING,
         defaultValue: null
+    },
+    socialId: {
+        type: DataTypes.STRING,
+    },
+    accessToken: {
+        type: DataTypes.STRING,
+    },
+    refreshToken: {
+        type: DataTypes.STRING
     }
 });
 Users.sync().then(() => {
@@ -44,7 +53,7 @@ Users.sync().then(() => {
 });
 
 //user include rented_movie
-Users.hasMany(Rented_Movie, { foreignKey: 'user_id' });
+Users.hasMany(Rented_Movie, { foreignKey: 'id' });
 Rented_Movie.belongsTo(Users, { foreignKey: 'user_id' });
 
 module.exports = Users;
