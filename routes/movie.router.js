@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const movieController = require('../controllers/movies.controller')
-const Middleware = require('../middlerwares/Middleware.auth')
-const imagemiddleware= require('../middlerwares/upload.middleware')
+const Middleware = require('../middlewares/Middleware.auth')
+const imagemiddleware= require('../middlewares/upload.middleware')
 
 
 /* movie page. */

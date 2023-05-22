@@ -1,6 +1,6 @@
 const express = require('express');
 const movieRentelController = require('../controllers/rentalMovie.controller')
-const Middleware = require('../middlerwares/Middleware.auth')
+const Middleware = require('../middlewares/Middleware.auth')
 const router = express.Router();
 
 /* rentel_movie page. */
