@@ -14,7 +14,7 @@ const { validateSignup,
     validateForgotpassword,
     validateResetpassword
 } = require('../validation/userValidation')
-
+const utils = require('../utils/authUtils')
 
 //signup controller
 const signup = async (req, res) => {
@@ -54,21 +54,12 @@ const signup = async (req, res) => {
                 })
             }
         } else {
-            res.status(200).send({
-                is_error: false,
-                statusCode: 404,
-                message: 'User already sign up',
-                data: null
-            })
+            res.status(200).send(utils.useralready)
         }
 
     } catch (error) {
         console.log(error)
-        return res.status(500).send({
-            is_error: true,
-            statusCode: 500,
-            message: 'Internal server error'
-        })
+        return res.status(500).send(utils.catchObje)
     }
 }
 
@@ -132,12 +123,7 @@ const login = async (req, res) => {
             }
         }
     } catch (error) {
-        console.log(error)
-        return res.status(500).send({
-            is_error: true,
-            statusCode: 500,
-            message: 'Internal server error'
-        })
+        return res.status(500).send(utils.catchObje)
     }
 }
 //forgot controller using mobile
@@ -188,12 +174,7 @@ const forgotpasswordMoible = async (req, res) => {
             }
         }
     } catch (error) {
-        console.log(error)
-        return res.status(500).send({
-            is_error: true,
-            statusCode: 500,
-            message: 'Internal server error'
-        })
+        return res.status(500).send(utils.catchObje)
     }
 }
 //forgotpassword controller
@@ -260,12 +241,7 @@ const forgotpassword = async (req, res) => {
             })
         }
     } catch (error) {
-        console.log(error)
-        return res.status(500).send({
-            is_error: true,
-            statusCode: 500,
-            message: 'Internal server error'
-        })
+        return res.status(500).send(utils.catchObje)
     }
 }
 
@@ -315,12 +291,7 @@ const resetpassword = async (req, res) => {
             }
         }
     } catch (error) {
-        console.log(error)
-        return res.status(500).send({
-            is_error: true,
-            statusCode: 500,
-            message: 'Internal server error'
-        })
+        return res.status(500).send(utils.catchObje)
     }
 }
 
