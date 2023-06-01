@@ -10,7 +10,13 @@ const useralready = {
     data: null
 }
 
+const Role = {
+    Customer :"customer",
+    Admin:"admin"
+}
+
 module.exports = {
     catchObje,
-    useralready
+    useralready,
+    Role
 }

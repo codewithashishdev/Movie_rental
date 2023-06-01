@@ -5,6 +5,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { google } = require('googleapis');
 const { OAuth2 } = google.auth;
 const authController = require('../controllers/auth.controller')
+const {isAuthenticated} = require('../middlewares/Middleware.auth')
 
 //google strategy
 passport.use(new GoogleStrategy({
@@ -37,6 +38,6 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 
 router.get('/auth/google/callback', passport.authenticate('google'), authController.google_user);
 
 //eamil in google auth
-router.get('/Dashboard', authController.dashboard)
+router.get('/Dashboard', isAuthenticated,authController.dashboard)
 
 module.exports = router

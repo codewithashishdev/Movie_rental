@@ -4,10 +4,21 @@ const Joi = require('joi')
 const { validationupdateUser } = require('../validation/userValidation')
 
 
+//dashboard page
+const dashboard = async (req, res) => {
+    res.status(200).send('dashboaed page')
+}
+
+//admin page
+const aadminDashbaoard = async(req,res) =>{
+    res.status(200).send('admin page')
+
+}
+
 //get user
 const get_user = async (req, res) => {
     try {
-        // console.log(req.id)
+        console.log(req.id)
         const user = await Users.findOne({
             attributes: ['name', 'email', 'contact_no', 'address', 'role'],
             where: {
@@ -101,9 +112,32 @@ const logout = async (req, res) => {
     }
 }
 
+const alluser = async(req,res,next) =>{
+    try {
+        console.log(req.id)
+        const user = await Users.findAll({
+            attributes: ['name', 'email', 'contact_no', 'address', 'role'],
+        });
+        return res.status(200).send({
+            is_login: true,
+            message: 'get user',
+            data: user
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            is_error: true,
+            message: 'token error'
+        })
+    }
+}
+
 module.exports = {
+    dashboard,
+    aadminDashbaoard,
     get_user,
     edit_user,
     delete_user,
-    logout
+    logout,
+    alluser
 }

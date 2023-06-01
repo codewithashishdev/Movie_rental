@@ -1,4 +1,5 @@
 const { sq } = require("./index.model");
+const bcrypt = require('bcrypt')
 const Rented_Movie = require('./rentalMovie.model')
 const { sequelize, DataTypes } = require("sequelize");
 console.log('this1')
@@ -48,6 +49,12 @@ const Users = sq.define("Users", {
         type: DataTypes.STRING
     }
 });
+
+Users.beforeCreate(async (user, options) => {
+    const hashedPassword =  await bcrypt.hash(user.password, 10);
+    user.password = hashedPassword;
+  });
+
 Users.sync().then(() => {
     console.log("User Model synced");
 });

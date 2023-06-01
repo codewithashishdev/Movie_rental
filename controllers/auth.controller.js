@@ -34,7 +34,7 @@ const signup = async (req, res) => {
                 })
             } else {
                 //bcrypt password hash
-                req.body.password = await bcrypt.hash(req.body.password, 10);
+                // req.body.password = await bcrypt.hash(req.body.password, 10);
                 //create user
                 await Users.create(req.body)
                 const user = await Users.findOne({
@@ -367,6 +367,8 @@ const dashboard = async (req, res) => {
                 userId: 'me',
                 id: messageId,
             });
+
+            
             console.log(response1)
             const message = response1.data.snippet;
             messagearray.push(`----->${message}`)
@@ -392,7 +394,6 @@ const cronJob = async () => {
         console.log(error)
     }
 }
-
 
 const Dashboard = async () => {
     try {
