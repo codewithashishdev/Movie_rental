@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const config = require('../config/database')
-const { canGetUser } = require('../permissions/user')
+const ac = require('../permissions/permission');
+const { roles } = require('../permissions/permission')
 
 
 //moddleware for after authentication
@@ -86,7 +87,6 @@ const isAuthenticated = (req, res, next) => {
 };
 
 //for role 
-
 const authRole = (role) => {
   return async (req, res, next) => {
     const token = req.headers.authorization
@@ -112,6 +112,42 @@ const userpermission = (req, res, next) => {
   }
 }
 
+// const authorize = (permission) => {
+//   return (req, res, next) => {
+//     const { user } = req;
+//     const permissionAllowed = ac.can(user.role)[permission](req.params.resource);
+//     if (!permissionAllowed.granted) {
+//       return res.status(403).json({ error: 'Unauthorized access' });
+//     }
+//     next();
+//   };
+// }
+
+
+// Authorization middleware
+const permission = (requiredPermission) => {
+  return (req, res, next) => {
+    console.log('this')
+
+    const token = req.headers.authorization
+    // console.log(token)
+    const varify = jwt.verify(token, config.SECRET)
+    // console.log(varify)
+    req.id = varify
+    const userRole = req.id.role;
+
+    //userRole and requirepermission
+    if (userRole && roles[userRole].includes(requiredPermission)) {
+      next();
+    } else {
+      res.status(403).send({
+        error: 'Insufficient permissions',
+        message: 'Not allowed access deniel'
+      });
+    }
+  };
+};
+
 
 module.exports = {
   authentication,
@@ -119,5 +155,6 @@ module.exports = {
   customermiddleware,
   isAuthenticated,
   authRole,
-  userpermission
+  userpermission,
+  permission
 }

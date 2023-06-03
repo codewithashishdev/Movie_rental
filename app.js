@@ -18,7 +18,10 @@ const authRouter = require('./routes/authantication.router')
 const movieRouter = require('./routes/movie.router')
 const movieRentalRouter = require('./routes/rentalMovie.router')
 const googleRouter = require('./routes/google.auth.router')
-const Gmails = require('./models/gmail.model')
+// const Gmails = require('./models/gmail.model')
+const roleRouter = require('./routes/role.route')
+const permisionRouter = require('./routes/permission.route')
+
 // const authController = require('./controllers/auth.controller.js');
 
 // middleware  Set up
@@ -46,6 +49,9 @@ app.use('/api', googleRouter);
 app.use('/users', usersRouter);
 app.use('/movie', movieRouter);
 app.use('/movierental', movieRentalRouter);
+app.use('/role', roleRouter);
+app.use('/permission', permisionRouter);
+
 
 //error handler for images
 const errhandler = (err, req, res, next) => {

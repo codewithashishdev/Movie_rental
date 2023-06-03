@@ -2,6 +2,7 @@ const Users = require("../models/users.model")
 const jwt = require('jsonwebtoken')
 const Joi = require('joi')
 const { validationupdateUser } = require('../validation/userValidation')
+const authorize = require('../permissions/permission');
 
 
 //dashboard page
