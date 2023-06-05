@@ -47,7 +47,6 @@ const edit_user = async (req, res) => {
         const user = await Users.findOne({
             where: { email: req.id.email }
         })
-
         if (user) {
             const { error } = validationupdateUser(req.body)
             if (error) {

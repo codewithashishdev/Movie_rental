@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken')
 const config = require('../config/database')
 const ac = require('../permissions/permission');
-const { roles } = require('../permissions/permission')
+// const { roles } = require('../permissions/permission')
+const Role = require('../models/role.model');
+const Permission = require('../models/permission.model')
 
 
 //moddleware for after authentication
@@ -126,7 +128,7 @@ const userpermission = (req, res, next) => {
 
 // Authorization middleware
 const permission = (requiredPermission) => {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     console.log('this')
 
     const token = req.headers.authorization
@@ -136,10 +138,44 @@ const permission = (requiredPermission) => {
     req.id = varify
     const userRole = req.id.role;
 
-    //userRole and requirepermission
-    if (userRole && roles[userRole].includes(requiredPermission)) {
+    const role = await Role.findOne({
+      where: {
+        role_name: userRole
+      }
+    })
+    let permisions = role.permission_id;
+    let permission_name = []
+    // console.log(permisions)
+    for (let index = 0; index < permisions.length; index++) {
+      const element = permisions[index];
+      console.log(element)
+      const permision = await Permission.findOne({
+        where: {
+          permission_id: element
+        }
+      })
+      // console.log(permision.permissions_name)
+      permission_name.push(permision.permissions_name)
+    }
+    // console.log(permission_name)
+    // const hasRequiredPermissions = requiredPermission.every(permission =>
+    //   userPermissions.includes(permission)
+    // );
+    if (userRole && permission_name.includes(requiredPermission)) {
       next();
-    } else {
+    }
+
+    // return console.log('')
+    // const permission = await Permission.findAll({
+    //   where: {
+    //     permission_id: role.permission_id
+    //   }
+    // })
+    // return console.log(permission.permissions_name)
+    // console.log(permission.permissions_name == requiredPermission)
+    // //userRole and requirepermission
+    // if (userRole && (permission.permissions_name == requiredPermission)) {
+    else {
       res.status(403).send({
         error: 'Insufficient permissions',
         message: 'Not allowed access deniel'
