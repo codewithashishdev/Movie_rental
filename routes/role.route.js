@@ -4,21 +4,21 @@ const router = express.Router();
 
 //import file
 const roleController = require('../controllers/role.controller')
-
+const middleware = require('../middlewares/Middleware.auth')
 //add role
-router.post('/',roleController.addRole)
+router.post('/', middleware.adminmiddleware, roleController.addRole)
 
 //get all role
-router.get('/',roleController.getRole)
+router.get('/', middleware.adminmiddleware, roleController.getRole)
 
 //add role by id
-router.get('/:id',roleController.getRolebyid)
+router.get('/:id', middleware.adminmiddleware, roleController.getRolebyid)
 
 //edit role by id
-router.put('/:id',roleController.editRole)
+router.put('/:id', middleware.adminmiddleware, roleController.editRole)
 
 //delete role by id
-router.delete('/:id',roleController.deleteRole)
+router.delete('/:id', middleware.adminmiddleware, roleController.deleteRole)
 
 
 module.exports = router;

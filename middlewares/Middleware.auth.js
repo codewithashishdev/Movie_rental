@@ -28,7 +28,6 @@ const authentication = async (req, res, next) => {
       })
     }
   }
-
 }
 //for admin token varification
 const adminmiddleware = async (req, res, next) => {

@@ -55,7 +55,7 @@ const getpermissionbyid = async (req, res) => {
         let id = req.params.id
         const permision = await Permission.findOne({
             where: {
-                permision_id: id
+                permission_id: id
             }
         })
         return res.status(200).send({

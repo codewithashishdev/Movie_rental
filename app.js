@@ -19,8 +19,10 @@ const movieRouter = require('./routes/movie.router')
 const movieRentalRouter = require('./routes/rentalMovie.router')
 const googleRouter = require('./routes/google.auth.router')
 // const Gmails = require('./models/gmail.model')
+const Tree = require('./models/tree.model')
 const roleRouter = require('./routes/role.route')
 const permisionRouter = require('./routes/permission.route')
+const treeRouter = require('./routes/tree.router')
 
 // const authController = require('./controllers/auth.controller.js');
 
@@ -51,6 +53,7 @@ app.use('/movie', movieRouter);
 app.use('/movierental', movieRentalRouter);
 app.use('/role', roleRouter);
 app.use('/permission', permisionRouter);
+app.use('/tree',treeRouter)
 
 
 //error handler for images
