@@ -89,8 +89,6 @@ const movieBy_id = async (req, res) => {
 const get_movieBy_serching = async (req, res) => {
     try {
         let search = req.params.search
-        console.log(search)
-
         if (!search) {
             return res.status(500).send({
                 is_error: true,
@@ -102,12 +100,10 @@ const get_movieBy_serching = async (req, res) => {
                 where: {
                     [Op.or]: [
                         { movie_name: { [Op.iLike]: `${search}%` } },
-                        // {genre:{[Op.iLike]:`${search}`}}
                     ]
                 },
                 raw: true
             })
-            console.log(movie)
             if (!movie) {
                 return res.status(200).send({
                     is_error: false,
@@ -140,7 +136,7 @@ const edit_movie = async (req, res) => {
                 message: 'id is require'
             })
         } else {
-            const {error} = validateEditMovie(req.body)
+            const { error } = validateEditMovie(req.body)
             if (error) {
                 return res.status(200).send({
                     is_error: true,

@@ -33,9 +33,6 @@ const signup = async (req, res) => {
                     message: error.details[0].message
                 })
             } else {
-                //bcrypt password hash
-                // req.body.password = await bcrypt.hash(req.body.password, 10);
-                //create user
                 await Users.create(req.body)
                 const user = await Users.findOne({
                     attributes: ['name', 'email', 'role', 'contact_no', 'address'],
@@ -44,8 +41,6 @@ const signup = async (req, res) => {
                     },
                     raw: true
                 })
-                console.log(user)
-                // console.log(JSON.stringify(user))
                 return res.status(201).send({
                     is_error: false,
                     statusCode: 201,
@@ -56,7 +51,6 @@ const signup = async (req, res) => {
         } else {
             res.status(200).send(utils.useralready)
         }
-
     } catch (error) {
         console.log(error)
         return res.status(500).send(utils.catchObje)
@@ -80,7 +74,6 @@ const login = async (req, res) => {
                     email: req.body.email
                 }
             })
-            console.log(req.body)
             //compare password
             const compare = await bcrypt.compare(req.body.password, user.password)
             if (compare) {
@@ -104,8 +97,7 @@ const login = async (req, res) => {
                         email: req.body.email
                     }
                 })
-
-                //lgoin response
+                //login response
                 return res.status(200).send({
                     is_error: false,
                     statusCode: 200,
@@ -146,16 +138,13 @@ const forgotpasswordMoible = async (req, res) => {
             if (contact) {
                 const client = twilio("AC85f7a25f0483e8d8e00e77ce8cbbc223", "44b707ccff99c8958357474f12f3ce20");
 
-                // Set the sender's phone number (Twilio phone number)
                 const senderNumber = '9510635154'; // Replace with your Twilio phone number
 
                 // Set the recipient's phone number
                 const recipientNumber = req.body.contact_no; // Replace with the recipient's phone number
                 const otp = otpGenerator.generate(7, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
-
                 // Compose the SMS message
                 const message = `otp : ${otp}`;
-
                 // Send the SMS
                 client.messages
                     .create({
@@ -308,10 +297,8 @@ const google_user = async (req, res) => {
 
         // Check if the user already exists in the database
         const existingUser = await Users.findOne({ email: email });
-        console.log('+++++++++++++++++++++++++', existingUser)
         if (existingUser) {
-            // User already exists, you can handle accordingly (e.g., update any changed details)
-            console.log('User already exists:', existingUser);
+            // User already exists
         } else {
             // User doesn't exist, create a new user record
             const newUser = await Users.create({
@@ -326,11 +313,9 @@ const google_user = async (req, res) => {
                 accessToken: accessToken,
                 refreshToken: refreshToken
             });
-            console.log('New user created:', newUser);
         }
         res.redirect('/api/Dashboard')
     } catch (error) {
-        console.error('Error processing Google authentication callback:', error);
         res.redirect('/login');
     }
 }
@@ -351,31 +336,20 @@ const dashboard = async (req, res) => {
             userId: 'me',
             maxResults: 10, // Adjust the number of results as needed
         });
-        console.log('+++++++++++++', response.data)
-
         const messages = response.data.messages;
-        console.log('User Gmail messages:', messages);
-
         // Retrieve the user's Gmail message by its ID
         const messagearray = []
         for (let index = 0; index < messages.length; index++) {
             const element = messages[index];
 
             const messageId = element.id;
-            console.log(messageId)
             const response1 = await gmail.users.messages.get({
                 userId: 'me',
                 id: messageId,
             });
-
-            
-            console.log(response1)
             const message = response1.data.snippet;
             messagearray.push(`----->${message}`)
-            console.log('User Gmail message:', message);
         }
-
-        console.log('mesage', messagearray)
         res.send({
             message: messagearray
         })

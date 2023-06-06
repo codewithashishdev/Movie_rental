@@ -17,10 +17,7 @@ const rental_movie = async (req, res) => {
                 message: error.details[0].message
             })
         } else {
-            // console.log( req.id.id)
             req.body.user_id = req.id.id
-            //  console.log( req.user_id)
-
             const movie_rentel = await Movie_Rental.create(req.body)
             const id = JSON.stringify(movie_rentel.Movie_id)
             // quantity minus in this movie
@@ -32,13 +29,11 @@ const rental_movie = async (req, res) => {
                     where: { id: id },
                 }
             )
-
             return res.status(200).send({
                 is_error: false,
                 message: 'movie rented',
                 data: movie_rentel
             })
-
         }
     } catch (error) {
         console.log(error)
@@ -53,14 +48,12 @@ const rental_movie = async (req, res) => {
 const return_movie = async (req, res) => {
     try { 
         const {error} = validateRentelMovie(req.body)
-        console.log('error')
         if (error) {
             return res.status(400).send({
                 is_error: true,
                 message: error.details[0].message
             })
         } else {
-            console.log(req.id.id)
             req.body.user_id = req.id.id
             const movie_rentel = await Movie_Rental.update({ is_returned: true },
                 {

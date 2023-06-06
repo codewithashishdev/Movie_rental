@@ -5,7 +5,7 @@ const movies = require('../models/movie.model')
 const rental_movie = require('../models/rentalMovie.model')
 const sequelize = require('sequelize')
 
-// Admin can get users with full detail of all movies he rented and total of movies and money
+// Admin can get users with full detail of all movies he rented and total of movies
 const all_information = async (req, res) => {
     try {
         const user = await Users.findAll({
@@ -21,9 +21,7 @@ const all_information = async (req, res) => {
 
                     include: [{
                         model: movies,
-                        attributes: ['movie_name', 'release_date', 'genre', 'price', 'quantity',
-                            // [sequelize.literal('(SELECT SUM(price) FROM movies)'),'total price' ]
-                        ]
+                        attributes: ['movie_name', 'release_date', 'genre', 'price', 'quantity'                        ]
                     }]
                 }
             ]

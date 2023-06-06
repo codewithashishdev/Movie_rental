@@ -4,6 +4,8 @@ const router = express.Router();
 //import file
 const permisionController = require('../controllers/permission.controller')
 const middleware = require('../middlewares/Middleware.auth')
+
+
 //add permission
 router.post('/', middleware.adminmiddleware, permisionController.addpermission)
 

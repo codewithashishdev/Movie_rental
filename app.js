@@ -18,13 +18,9 @@ const authRouter = require('./routes/authantication.router')
 const movieRouter = require('./routes/movie.router')
 const movieRentalRouter = require('./routes/rentalMovie.router')
 const googleRouter = require('./routes/google.auth.router')
-// const Gmails = require('./models/gmail.model')
-const Tree = require('./models/tree.model')
 const roleRouter = require('./routes/role.route')
 const permisionRouter = require('./routes/permission.route')
 const treeRouter = require('./routes/tree.router')
-
-// const authController = require('./controllers/auth.controller.js');
 
 // middleware  Set up
 app.use(cors()); // CORS middleware for cross-origin requests
@@ -35,15 +31,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'YOUR_SESSION_SECRET', resave: false, saveUninitialized: false }));
 
 
-//
 let server = http.createServer(app)
-;
 
 // Initialize Passport and restore authentication state, if any, from the session
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(express.static('public'))
-
 
 //route
 app.use('/', authRouter);
@@ -66,20 +58,14 @@ const errhandler = (err, req, res, next) => {
 }
 app.use(errhandler)
 
-
 // Start the server
 const port = process.env.SERVER_PORT || 3000
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
-
-
 let io = socketIO(server)
-
-
 io.on('connection', (socket) => {
   console.log('user is connected!');
-
 })
 
 module.exports = app;

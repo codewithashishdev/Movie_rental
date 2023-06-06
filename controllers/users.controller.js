@@ -43,7 +43,6 @@ const get_user = async (req, res) => {
 //edit user
 const edit_user = async (req, res) => {
     try {
-        console.log(req.id)
         const user = await Users.findOne({
             where: { email: req.id.email }
         })
@@ -64,7 +63,6 @@ const edit_user = async (req, res) => {
                 })
             }
         }
-
     } catch (error) {
         console.log(error)
         return res.status(400).send({
@@ -77,7 +75,6 @@ const edit_user = async (req, res) => {
 //delete user
 const delete_user = async (req, res) => {
     try {
-        console.log(req.id)
         await Users.destroy({
             where: {
                 email: req.id.email
@@ -114,7 +111,6 @@ const logout = async (req, res) => {
 
 const alluser = async(req,res,next) =>{
     try {
-        console.log(req.id)
         const user = await Users.findAll({
             attributes: ['name', 'email', 'contact_no', 'address', 'role'],
         });

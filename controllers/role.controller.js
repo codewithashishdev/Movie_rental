@@ -16,7 +16,6 @@ const addRole = async (req, res) => {
                 message: error.details[0].message
             })
         } else {
-            console.log('role')
             const role = await Role.create(req.body)
             return res.status(201).send({
                 is_error: false,
@@ -87,7 +86,6 @@ const editRole = async (req, res) => {
             })
         } else {
             id = req.params.id
-            console.log('in else', id)
             const role = await Role.update(req.body, {
                 where: {
                     id: id

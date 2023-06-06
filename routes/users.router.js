@@ -31,4 +31,6 @@ router.get('/logout', Middleware.authentication, UserController.logout)
 //all user 
 router.get('/alluser',Middleware.adminmiddleware,UserController.alluser)
 
+
+
 module.exports = router;
