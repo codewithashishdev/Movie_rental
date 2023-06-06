@@ -23,6 +23,7 @@ const Tree = sq.define("Tree", {
     }
 });
 
+Tree.hasMany(Tree, { as: 'children', foreignKey: 'perent' });
 
 Tree.sync().then(() => {
     console.log("Tree Model synced");

@@ -11,6 +11,7 @@ const role = sq.define("role", {
         foreignKey: true
     }
 });
+
 role.sync().then(() => {
     console.log("Roles Model synced");
 });
