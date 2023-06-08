@@ -15,6 +15,9 @@ const { validateSignup,
     validateResetpassword
 } = require('../validation/userValidation')
 const utils = require('../utils/authUtils')
+const Logger = require('./logger.controller')
+
+
 
 //signup controller
 const signup = async (req, res) => {
@@ -27,6 +30,7 @@ const signup = async (req, res) => {
         if (!existingUser) {
             const { error } = validateSignup(req.body)
             if (error) {
+                Logger.authLogger.log('error', 'Validation Error "singup"',)
                 return res.status(200).send({
                     is_error: true,
                     statusCode: 406,
@@ -41,6 +45,7 @@ const signup = async (req, res) => {
                     },
                     raw: true
                 })
+                Logger.authLogger.log('info', 'User create Successfully')
                 return res.status(201).send({
                     is_error: false,
                     statusCode: 201,
@@ -49,10 +54,12 @@ const signup = async (req, res) => {
                 })
             }
         } else {
+            Logger.authLogger.log('info', 'User Already Exists','')
             res.status(200).send(utils.useralready)
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error')
         return res.status(500).send(utils.catchObje)
     }
 }
@@ -63,6 +70,7 @@ const login = async (req, res) => {
     try {
         const { error } = validateLogin(req.body)
         if (error) {
+            Logger.authLogger.log('error', 'Validation Error "login"')
             return res.status(200).send({
                 is_error: true,
                 statusCode: 406,
@@ -86,7 +94,7 @@ const login = async (req, res) => {
                     },
                     config.SECRET,
                     {
-                        expiresIn: "4h",
+                        expiresIn: config.EXPIRE_TOKEN,
                     }
                 );
                 user.token = user;
@@ -98,6 +106,7 @@ const login = async (req, res) => {
                     }
                 })
                 //login response
+                Logger.authLogger.log('info', 'User login Successfully "login"')
                 return res.status(200).send({
                     is_error: false,
                     statusCode: 200,
@@ -106,6 +115,7 @@ const login = async (req, res) => {
                     token: token
                 })
             } else {
+                Logger.authLogger.log('error', 'Wrong Password "login"')
                 return res.status(200).send({
                     is_error: true,
                     statusCode: 403,
@@ -115,6 +125,7 @@ const login = async (req, res) => {
             }
         }
     } catch (error) {
+        Logger.authLogger.log('error', 'Internal Server Error "login"')
         return res.status(500).send(utils.catchObje)
     }
 }
@@ -126,6 +137,7 @@ const forgotpasswordMoible = async (req, res) => {
         })
         const error = userschema.validate(req.body).error
         if (error) {
+            Logger.authLogger.log('error', 'Validation Error')
             return res.status(200).send({
                 is_error: true,
                 statusCode: 406,
@@ -163,6 +175,7 @@ const forgotpasswordMoible = async (req, res) => {
             }
         }
     } catch (error) {
+        Logger.authLogger.log('error', 'Internal Server Error')
         return res.status(500).send(utils.catchObje)
     }
 }
@@ -171,6 +184,7 @@ const forgotpassword = async (req, res) => {
     try {
         const { error } = validateForgotpassword(req.body)
         if (error) {
+            Logger.authLogger.log('error', 'Validation Error "forgotpassword"')
             return res.status(200).send({
                 is_error: true,
                 statusCode: 406,
@@ -217,11 +231,13 @@ const forgotpassword = async (req, res) => {
 
             mailTransporter.sendMail(mailDetails, function (err, data) {
                 if (err) {
+                    Logger.authLogger.log('error', 'Email is not Sended "forgotpassword"')
                     console.log(err)
                 } else {
                     console.log(data)
                 }
             })
+            Logger.authLogger.log('info', 'Otp Sended By Your Email "forgotpassword"')
             return res.status(200).send({
                 is_error: false,
                 statusCode: 200,
@@ -230,6 +246,7 @@ const forgotpassword = async (req, res) => {
             })
         }
     } catch (error) {
+        Logger.authLogger.log('error', 'Internal Server Error "forgotpassword"')
         return res.status(500).send(utils.catchObje)
     }
 }
@@ -239,6 +256,7 @@ const resetpassword = async (req, res) => {
     try {
         const { error } = validateResetpassword(req.body)
         if (error) {
+            Logger.authLogger.log('error', 'Validation Error "resetpassword"')
             return res.status(200).send({
                 is_error: true,
                 statuscode: 404,
@@ -251,6 +269,7 @@ const resetpassword = async (req, res) => {
                 }
             })
             if (!user) {
+                Logger.authLogger.log('error', 'user is not exist "resetpassword"')
                 return res.status(400).send({
                     is_error: false,
                     statusCode: 404,
@@ -265,12 +284,14 @@ const resetpassword = async (req, res) => {
                             email: req.body.email
                         }
                     })
+                    Logger.authLogger.log('info', 'Password Changed Successfully "resetpassword"')
                     return res.status(200).send({
                         is_error: false,
                         statusCode: 200,
-                        message: 'password changed '
+                        message: 'password changed'
                     })
                 } else {
+                    Logger.authLogger.log('error', 'Otp is Not Matched "resetpassword"')
                     return res.status(400).send({
                         is_error: false,
                         statusCode: 404,
@@ -280,6 +301,7 @@ const resetpassword = async (req, res) => {
             }
         }
     } catch (error) {
+        Logger.authLogger.log('error', 'Internal Server Error "resetpassword"')
         return res.status(500).send(utils.catchObje)
     }
 }
@@ -354,6 +376,7 @@ const dashboard = async (req, res) => {
             message: messagearray
         })
     } catch (error) {
+        Logger.authLogger.log('error', 'Internal Server Error "dashboard"')
         console.log(error)
         res.send({
             message: error.message
@@ -365,6 +388,7 @@ const cronJob = async () => {
     try {
         cron.schedule('*/10 * * * * *', dashboard(req, res));
     } catch (error) {
+        Logger.authLogger.log('error', 'Internal Server Error "cronJob"')
         console.log(error)
     }
 }
@@ -375,6 +399,7 @@ const Dashboard = async () => {
             dashboard(req, res)
         })
     } catch (error) {
+        Logger.authLogger.log('error', 'Internal Server Error"Dashboard"')
         console.log(error)
     }
 }

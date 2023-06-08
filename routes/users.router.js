@@ -23,7 +23,7 @@ router.put('/', Middleware.authentication, Middleware.permission('edit-user'),Us
 router.delete('/', Middleware.authentication, Middleware.permission('delete-user'),UserController.delete_user)
 
 //all information 
-router.get('/movies', Middleware.adminmiddleware,Middleware.permission('read'),adminController.all_information)
+router.get('/movies', Middleware.adminmiddleware,adminController.all_information)
 
 //logout api
 router.get('/logout', Middleware.authentication, UserController.logout)

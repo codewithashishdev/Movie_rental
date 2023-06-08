@@ -5,12 +5,15 @@ const Joi = require('joi')
 const { Op } = require("sequelize")
 const jwt = require('jsonwebtoken')
 const { validateAddMovie, validateEditMovie } = require('../validation/movieValidation')
+const Logger = require('./logger.controller')
+
 
 //add movie
 const add_movie = async (req, res) => {
     try {
         const { error } = validateAddMovie(req.body)
         if (error) {
+            Logger.authLogger.log('error', 'Validation Error "add_movie"')
             return res.status(200).send({
                 is_error: true,
                 message: error.details[0].message
@@ -19,6 +22,7 @@ const add_movie = async (req, res) => {
             const data = req.body
             data.movie_title = `${process.env.URL}/movie/Movie_title/${req.file.filename}`
             const movie = await Movies.create(data)
+            Logger.authLogger.log('info', 'Movie Created Successfully "add_movie"')
             return res.status(201).send({
                 is_error: false,
                 message: 'movie created',
@@ -27,6 +31,7 @@ const add_movie = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "add_movie"')
         return res.status(500).send({
             is_error: true,
             message: 'Internal server error'
@@ -41,6 +46,7 @@ const get_movie = async (req, res) => {
         const movies = await Movies.findAll({
             attributes: ['id', 'movie_name', 'release_date', 'genre', 'price', 'quantity', 'movie_title']
         })
+        Logger.authLogger.log('info', 'All Movie "get_movie"')
         return res.status(200).send({
             is_error: false,
             message: 'all movie here',
@@ -48,6 +54,7 @@ const get_movie = async (req, res) => {
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "get_movie"')
         return res.status(500).send({
             is_error: true,
             message: 'Internal server error'
@@ -59,6 +66,7 @@ const movieBy_id = async (req, res) => {
     try {
         id = req.params.id
         if (!id) {
+            Logger.authLogger.log('error', 'Id is Require "movieBy_id"')
             return res.status(500).send({
                 is_error: true,
                 message: 'id is require'
@@ -70,6 +78,7 @@ const movieBy_id = async (req, res) => {
                     id: id
                 }
             })
+            Logger.authLogger.log('info', 'movie "movieBy_id"')
             return res.status(200).send({
                 is_error: true,
                 data: movie
@@ -78,6 +87,7 @@ const movieBy_id = async (req, res) => {
 
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "movieBy_id"')
         return res.status(500).send({
             is_error: true,
             message: 'Internal server error'
@@ -90,6 +100,7 @@ const get_movieBy_serching = async (req, res) => {
     try {
         let search = req.params.search
         if (!search) {
+            Logger.authLogger.log('error', 'Enter Movie name properly "get_movieBy_serching"')
             return res.status(500).send({
                 is_error: true,
                 message: 'Enter value'
@@ -105,11 +116,13 @@ const get_movieBy_serching = async (req, res) => {
                 raw: true
             })
             if (!movie) {
+                Logger.authLogger.log('error', 'movie is not exits "get_movieBy_serching"')
                 return res.status(200).send({
                     is_error: false,
                     message: 'movie is not exits'
                 })
             } else {
+                Logger.authLogger.log('info', 'Searched Movies "get_movieBy_serching"')
                 return res.status(200).send({
                     is_error: false,
                     message: 'movie is here',
@@ -119,6 +132,7 @@ const get_movieBy_serching = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "get_movieBy_serching"')
         res.status(500).send({
             is_error: true,
             message: 'data is not get'
@@ -131,6 +145,7 @@ const edit_movie = async (req, res) => {
     try {
         const id = req.params.id
         if (!id) {
+            Logger.authLogger.log('error', 'Id is Require "edit_movie"')
             return res.status(500).send({
                 is_error: true,
                 message: 'id is require'
@@ -138,6 +153,7 @@ const edit_movie = async (req, res) => {
         } else {
             const { error } = validateEditMovie(req.body)
             if (error) {
+                Logger.authLogger.log('error', 'Validation Error "edit_movie"')
                 return res.status(200).send({
                     is_error: true,
                     message: error.details[0].message
@@ -148,6 +164,7 @@ const edit_movie = async (req, res) => {
                         id: req.params.id
                     }
                 })
+                Logger.authLogger.log('info', 'Movie Updated "edit_movie"')
                 return res.status(200).send({
                     is_error: false,
                     message: 'movie updated',
@@ -157,6 +174,7 @@ const edit_movie = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "edit_movie"')
         return res.status(500).send({
             is_error: true,
             message: 'Internal server error'
@@ -172,6 +190,7 @@ const delete_movie = async (req, res) => {
                 id: req.params.id
             }
         })
+        Logger.authLogger.log('info', 'Movie Deleted "delete_movie"')
         return res.status(200).send({
             is_error: false,
             message: 'movie deleted',
@@ -180,6 +199,7 @@ const delete_movie = async (req, res) => {
 
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "delete_movie"')
         return res.status(500).send({
             is_error: true,
             message: 'Internal server error'

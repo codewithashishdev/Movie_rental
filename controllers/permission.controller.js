@@ -1,5 +1,8 @@
 const Permission = require('../models/permission.model')
 const Joi = require('joi')
+const Logger = require('./logger.controller')
+
+
 //add permission
 const addpermission = async (req, res) => {
     try {
@@ -9,6 +12,7 @@ const addpermission = async (req, res) => {
         })
         const error = roleSchema.validate(req.body).error
         if (error) {
+            Logger.authLogger.log('error', 'Validation error "addpermission"')
             return res.status(200).send({
                 is_error: true,
                 statusCode: 406,
@@ -16,6 +20,7 @@ const addpermission = async (req, res) => {
             })
         } else {
             const permision = await Permission.create(req.body)
+            Logger.authLogger.log('info', 'Permission Created Successfully "addpermission"')
             return res.status(201).send({
                 error: false,
                 message: 'permission created successfully',
@@ -24,6 +29,7 @@ const addpermission = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "addpermission"')
         res.status(500).send({
             error: true,
             message: 'internal error'
@@ -35,6 +41,7 @@ const addpermission = async (req, res) => {
 const getpermission = async (req, res) => {
     try {
         const permision = await Permission.findAll()
+        Logger.authLogger.log('info', 'Get Permissions Successfully "getpermission"')
         return res.status(200).send({
             error: false,
             message: 'all permission',
@@ -42,6 +49,7 @@ const getpermission = async (req, res) => {
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "getpermission"')
         res.status(500).send({
             error: true,
             message: 'internal error'
@@ -58,13 +66,15 @@ const getpermissionbyid = async (req, res) => {
                 permission_id: id
             }
         })
+        Logger.authLogger.log('info', 'Get Permission Successfully "getpermissionbyid"')
         return res.status(200).send({
             error: false,
-            message: 'permission',
+            message: ' get permission',
             permission: permision
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "getpermissionbyid"')
         res.status(500).send({
             error: true,
             message: 'internal error'
@@ -81,6 +91,7 @@ const editpermission = async (req, res) => {
         })
         const error = roleSchema.validate(req.body).error
         if (error) {
+            Logger.authLogger.log('error', 'Validation error "editpermission"')
             return res.status(200).send({
                 is_error: true,
                 statusCode: 406,
@@ -93,6 +104,7 @@ const editpermission = async (req, res) => {
                     permision_id: id
                 }
             })
+            Logger.authLogger.log('info', 'Permission Updated "editpermission"')
             return res.status(200).send({
                 error: false,
                 message: 'permission updated',
@@ -100,6 +112,7 @@ const editpermission = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "editpermission"')
         res.status(500).send({
             error: true,
             message: 'internal error'
@@ -116,12 +129,14 @@ const deletepermission = async (req, res) => {
                 permision_id: id
             }
         })
+        Logger.authLogger.log('info', 'Permission Deleted "deletepermission"')
         return res.status(200).send({
             error: false,
             message: 'permission deleted',
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "deletepermission"')
         res.status(500).send({
             error: true,
             message: 'internal error'

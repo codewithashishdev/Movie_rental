@@ -6,20 +6,27 @@ const Users = require('../models/users.model')
 const jwt = require('jsonwebtoken')
 const Sequelize = require('sequelize')
 const { validateRentelMovie } = require('../validation/rentelValidation')
+const Logger = require('./logger.controller')
+
 
 //rentel movie
 const rental_movie = async (req, res) => {
     try {
         const { error } = validateRentelMovie(req.body)
         if (error) {
+            Logger.authLogger.log('error', 'Validation error "rental_movie"')
             return res.status(400).send({
                 is_error: true,
                 message: error.details[0].message
             })
         } else {
+            console.log('else', req.id.id)
             req.body.user_id = req.id.id
+            console.log(req.body)
             const movie_rentel = await Movie_Rental.create(req.body)
-            const id = JSON.stringify(movie_rentel.Movie_id)
+            // const id = JSON.stringify(movie_rentel.Movie_id)
+            console.log(movie_rentel)
+            const id  = movie_rentel.Movie_id
             // quantity minus in this movie
             const movie = Movies.update(
                 {
@@ -29,6 +36,7 @@ const rental_movie = async (req, res) => {
                     where: { id: id },
                 }
             )
+            Logger.authLogger.log('info', 'Movie rental "rental_movie"')
             return res.status(200).send({
                 is_error: false,
                 message: 'movie rented',
@@ -37,18 +45,20 @@ const rental_movie = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "rental_movie"')
         return res.status(400).send({
             is_error: true,
-            message: 'token error'
+            message: 'Internal Server Error'
         })
     }
 }
 
 //return movie
 const return_movie = async (req, res) => {
-    try { 
-        const {error} = validateRentelMovie(req.body)
+    try {
+        const { error } = validateRentelMovie(req.body)
         if (error) {
+            Logger.authLogger.log('error', 'Validation error "return_movie"')
             return res.status(400).send({
                 is_error: true,
                 message: error.details[0].message
@@ -79,6 +89,7 @@ const return_movie = async (req, res) => {
                 {
                     where: { id: id },
                 })
+            Logger.authLogger.log('info', 'Movie Return "return_movie"')
             return res.status(200).send({
                 is_error: false,
                 message: 'movie return',
@@ -87,6 +98,7 @@ const return_movie = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "return_movie"')
         return res.status(400).send({
             is_error: true,
             message: 'token error'

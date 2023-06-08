@@ -2,6 +2,7 @@
 const Tree = require('../models/tree.model')
 const Joi = require('joi')
 const { Sequelize, Op } = require('sequelize');
+const Logger = require('./logger.controller')
 
 
 //add file
@@ -16,6 +17,7 @@ const addfile = async (req, res) => {
         })
         const error = treeschema.validate(req.body).error
         if (error) {
+            Logger.authLogger.log('error','Validation Error "addfile"')
             return res.status(200).send({
                 is_error: true,
                 statusCode: 406,
@@ -24,6 +26,7 @@ const addfile = async (req, res) => {
         } else {
             if (!req.body.perent) {
                 const tree = await Tree.create(req.body)
+                Logger.authLogger.log('info','File Created "addfile"')
                 return res.status(201).send({
                     error: false,
                     message: 'file or folder created successfully',
@@ -54,14 +57,16 @@ const addfile = async (req, res) => {
                                 id: tree.perent
                             }
                         })
+                    Logger.authLogger.log('error','File Created "addfile"')
                     return res.status(201).send({
                         error: false,
                         message: 'file or folder created successfully',
                         root: tree
                     })
                 } else {
+                    Logger.authLogger.log('error','File not created "addfile"')
                     return res.status(201).send({
-                        error: false,
+                        error: true,
                         message: 'Inside file you not create',
                         root: null
                     })
@@ -70,6 +75,7 @@ const addfile = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error','Internal Server Error "addfile"')
         return res.status(500).send({
             error: true,
             message: 'internal server error'
@@ -85,18 +91,20 @@ const getallfile = async (req, res) => {
         })
         const buildTree = (data, parentId = null) => {
             const tree = [];
-            data.forEach(item => {
-                if (item.perent === parentId) {
-                    const children = buildTree(data, item.id);
+            for (let index = 0; index < data.length; index++) {
+                const element = data[index];
+                if (element.perent === parentId) {
+                    const children = buildTree(data, element.id);
                     if (children.length > 0) {
-                        item.child = children;
+                        element.child = children;
                     }
-                    tree.push(item);
+                    tree.push(element);
                 }
-            });
+            }
             return tree;
         }
         const tree = buildTree(data, null);
+        Logger.authLogger.log('info','All file and folder "getallfile"')
         return res.status(200).send({
             error: false,
             message: 'all file or folder',
@@ -104,6 +112,7 @@ const getallfile = async (req, res) => {
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error','Internal Server Error "getallfile"')
         return res.status(500).send({
             error: true,
             message: 'internal server error'
@@ -119,6 +128,7 @@ const editfile = async (req, res) => {
         })
         const error = treeschema.validate(req.body).error
         if (error) {
+            Logger.authLogger.log('error','Validation Error "editfile"')
             return res.status(200).send({
                 is_error: true,
                 statusCode: 406,
@@ -133,12 +143,14 @@ const editfile = async (req, res) => {
                 }
             })
         }
+        Logger.authLogger.log('info','File Name is Updated "editfile"')
         return res.status(200).send({
             error: false,
             message: 'updated'
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error','Internal Server Error  "editfile"')
         return res.status(500).send({
             error: true,
             message: 'internal server error'
@@ -170,6 +182,7 @@ const deletefile = async (req, res) => {
             }
         };
         deleteFile(id)
+        Logger.authLogger.log('info','File Deleted "deletefile"')
         return res.send({
             error: false,
             message: 'deleted'
@@ -177,6 +190,7 @@ const deletefile = async (req, res) => {
 
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error','Internal Server Error "deletefile"')
         return res.status(500).send({
             error: true,
             message: 'internal server error'
@@ -187,12 +201,14 @@ const deletefile = async (req, res) => {
 //get file by id
 const getfilebyid = async (req, res) => {
     try {
+        Logger.authLogger.log('info','WIP "getfilebyid"')
         return res.status(500).send({
             error: false,
             message: 'work in progress'
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error','Internal Server Error "getfilebyid"')
         return res.status(500).send({
             error: true,
             message: 'internal server error'

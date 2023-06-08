@@ -1,5 +1,6 @@
 const Role = require('../models/role.model')
 const Joi = require('joi')
+const Logger = require('./logger.controller')
 
 //add role
 const addRole = async (req, res) => {
@@ -10,6 +11,7 @@ const addRole = async (req, res) => {
         })
         const error = roleSchema.validate(req.body).error
         if (error) {
+            Logger.authLogger.log('error', 'Validation error "addRole"')
             return res.status(200).send({
                 is_error: true,
                 statusCode: 406,
@@ -17,6 +19,7 @@ const addRole = async (req, res) => {
             })
         } else {
             const role = await Role.create(req.body)
+            Logger.authLogger.log('info', 'Role Created "addRole"')
             return res.status(201).send({
                 is_error: false,
                 statusCode: 201,
@@ -27,6 +30,7 @@ const addRole = async (req, res) => {
 
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "addRole"')
         res.status(500).send({
             error: true,
             message: 'internal error'
@@ -39,12 +43,14 @@ const addRole = async (req, res) => {
 const getRole = async (req, res) => {
     try {
         const roles = await Role.findAll()
+        Logger.authLogger.log('info', 'get Roles "getRole"')
         return res.status(200).send({
             error: false,
             Role: roles
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "getRole"')
         res.status(500).send({
             error: true,
             message: 'internal error'
@@ -63,6 +69,7 @@ const getRolebyid = async (req, res) => {
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "getRolebyid"')
         res.status(500).send({
             error: true,
             message: 'internal error'
@@ -79,6 +86,7 @@ const editRole = async (req, res) => {
         })
         const error = roleSchema.validate(req.body).error
         if (error) {
+            Logger.authLogger.log('error', 'Validation error "editRole"')
             return res.status(200).send({
                 is_error: true,
                 statusCode: 406,
@@ -91,6 +99,7 @@ const editRole = async (req, res) => {
                     id: id
                 }
             })
+            Logger.authLogger.log('info', 'Role Updated "editRole"')
             return res.status(200).send({
                 error: false,
                 message: 'updated'
@@ -98,6 +107,7 @@ const editRole = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "editRole"')
         res.status(500).send({
             error: true,
             message: 'internal error'
@@ -114,6 +124,7 @@ const deleteRole = async (req, res) => {
                 permision_id: id
             }
         })
+        Logger.authLogger.log('info', 'Role Deleted "editRole"')
         return res.status(200).send({
             error: true,
             message: 'role deleted successfully'
@@ -121,6 +132,7 @@ const deleteRole = async (req, res) => {
 
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "deleteRole"')
         res.status(500).send({
             error: true,
             message: 'internal error'

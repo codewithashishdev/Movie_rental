@@ -3,6 +3,7 @@ const config = require('../config/database')
 const ac = require('../permissions/permission');
 const Role = require('../models/role.model');
 const Permission = require('../models/permission.model')
+const Logger = require('../controllers/logger.controller')
 
 
 //moddleware for after authentication
@@ -10,6 +11,7 @@ const authentication = async (req, res, next) => {
 
   let token = req.headers.authorization
   if (!token) {
+    Logger.authLogger.log('error', 'Not Token "authentication Middleware"')
     return res.status(400).send({
       is_error: true,
       message: 'sorry, You have no token',
@@ -20,6 +22,7 @@ const authentication = async (req, res, next) => {
       req.id = varify
       next()
     } else {
+      Logger.authLogger.log('error', 'Middlware "authentication Middleware"')
       return res.status(200).send({
         is_error: true,
         message: 'something went wrong',
@@ -31,6 +34,7 @@ const authentication = async (req, res, next) => {
 const adminmiddleware = async (req, res, next) => {
   const token = req.headers.authorization
   if (!token) {
+    Logger.authLogger.log('error', 'Not Token "Admin-Authentication Middleware"')
     return res.status(200).send({
       is_error: true,
       message: 'sorry, You have no token'
@@ -41,6 +45,7 @@ const adminmiddleware = async (req, res, next) => {
       next()
       return
     } else {
+      Logger.authLogger.log('error', 'Not Allowed "Admin-Authentication Middleware"')
       return res.status(200).send({
         is_error: true,
         message: 'customer have not permission'
@@ -53,6 +58,7 @@ const adminmiddleware = async (req, res, next) => {
 const customermiddleware = async (req, res, next) => {
   const token = req.headers.authorization
   if (!token) {
+    Logger.authLogger.log('error', 'Not Token "Customer-Authentication Middleware"')
     return res.status(200).send({
       is_error: true,
       message: 'sorry, You have no token'
@@ -64,6 +70,7 @@ const customermiddleware = async (req, res, next) => {
       next()
       return
     } else {
+      Logger.authLogger.log('error', 'Not Allowed "Customer-Authentication Middleware"')
       return res.status(200).send({
         is_error: true,
         message: 'admin not rented and return movie '
@@ -131,6 +138,7 @@ const permission = (requiredPermission) => {
       next();
     }
     else {
+      Logger.authLogger.log('error', 'Not Permissioned "Permission Middleware"')
       res.status(403).send({
         error: 'Insufficient permissions',
         message: 'Not allowed access deniel'

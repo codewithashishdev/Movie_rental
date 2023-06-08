@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const Joi = require('joi')
 const { validationupdateUser } = require('../validation/userValidation')
 const authorize = require('../permissions/permission');
-
+const Logger = require('./logger.controller')
 
 //dashboard page
 const dashboard = async (req, res) => {
@@ -19,13 +19,13 @@ const aadminDashbaoard = async(req,res) =>{
 //get user
 const get_user = async (req, res) => {
     try {
-        console.log(req.id)
         const user = await Users.findOne({
             attributes: ['name', 'email', 'contact_no', 'address', 'role'],
             where: {
                 email: req.id.email
             }
         });
+        Logger.authLogger.log('info', 'Get User "get_user"')
         return res.status(200).send({
             is_login: true,
             message: 'get user',
@@ -33,9 +33,10 @@ const get_user = async (req, res) => {
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "get_user"')
         res.status(500).send({
             is_error: true,
-            message: 'token error'
+            message: 'Internal Server Error'
         })
     }
 }
@@ -49,6 +50,7 @@ const edit_user = async (req, res) => {
         if (user) {
             const { error } = validationupdateUser(req.body)
             if (error) {
+                Logger.authLogger.log('error','Validation Error  "edit_user"')
                 return res.status(400).send({
                     is_error: true,
                     message: error.details[0].message
@@ -57,6 +59,7 @@ const edit_user = async (req, res) => {
                 await Users.update(req.body, {
                     where: { email: req.id.email }
                 })
+                Logger.authLogger.log('info','User Updated "edit_user"')
                 return res.status(200).send({
                     is_error: false,
                     message: 'user updated',
@@ -65,9 +68,10 @@ const edit_user = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "edit_user"')
         return res.status(400).send({
             is_error: true,
-            message: ''
+            message: 'Internal Server Error'
         })
     }
 }
@@ -81,15 +85,17 @@ const delete_user = async (req, res) => {
             },
             force: true
         });
+        Logger.authLogger.log('info', 'User Deleted uccessfully "delete_user"')
         return res.status(200).send({
             is_login: true,
             message: 'your user is deleted successfully',
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "delete_user"')
         return res.status(400).send({
             is_error: true,
-            message: 'token error'
+            message: 'Internal Server Error'
         })
     }
 }
@@ -114,6 +120,7 @@ const alluser = async(req,res,next) =>{
         const user = await Users.findAll({
             attributes: ['name', 'email', 'contact_no', 'address', 'role'],
         });
+        Logger.authLogger.log('info', 'Get All User uccessfully "alluser"')
         return res.status(200).send({
             is_login: true,
             message: 'get user',
@@ -121,9 +128,10 @@ const alluser = async(req,res,next) =>{
         })
     } catch (error) {
         console.log(error)
+        Logger.authLogger.log('error', 'Internal Server Error "alluser"')
         res.status(500).send({
             is_error: true,
-            message: 'token error'
+            message: 'Internal Server Error'
         })
     }
 }

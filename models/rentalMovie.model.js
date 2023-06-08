@@ -23,7 +23,6 @@ const Rented_Movie = sq.define("Rented_Movie", {
     },
     is_returned: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
         defaultValue: false
     }
 }
