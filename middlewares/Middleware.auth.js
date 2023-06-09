@@ -10,6 +10,7 @@ const Logger = require('../controllers/logger.controller')
 const authentication = async (req, res, next) => {
 
   let token = req.headers.authorization
+  console.log(token)
   if (!token) {
     Logger.authLogger.log('error', 'Not Token "authentication Middleware"')
     return res.status(400).send({
@@ -18,6 +19,7 @@ const authentication = async (req, res, next) => {
     })
   } else {
     const varify = jwt.verify(token, config.SECRET)
+    console.log(varify.exp)
     if (varify) {
       req.id = varify
       next()
@@ -34,18 +36,19 @@ const authentication = async (req, res, next) => {
 const adminmiddleware = async (req, res, next) => {
   const token = req.headers.authorization
   if (!token) {
-    Logger.authLogger.log('error', 'Not Token "Admin-Authentication Middleware"')
+    Logger.authLogger.info(`Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     return res.status(200).send({
       is_error: true,
       message: 'sorry, You have no token'
     })
   } else {
     const varify = jwt.verify(token, config.SECRET)
+    console.log(varify.exp)
     if (varify.role === "admin") {
       next()
       return
     } else {
-      Logger.authLogger.log('error', 'Not Allowed "Admin-Authentication Middleware"')
+      Logger.authLogger.info(`Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip}`)
       return res.status(200).send({
         is_error: true,
         message: 'customer have not permission'

@@ -4,14 +4,16 @@ const {createLogger,transports,format} = require('winston');
 
 const authLogger = createLogger({
     transports:[
-        new transports.Console(),
+        new transports.Console({
+            format: format.combine(format.timestamp(),format.json()),
+        }),
         new transports.File({
-            filename:'authantication.log',
+            filename:'api-logs.log',
             level:'info',
             format: format.combine(format.timestamp(),format.json()),
         }),
         new transports.File({
-            filename:'authantication-error.log',
+            filename:'error-logs.log',
             level:'error',
             format: format.combine(format.timestamp(),format.json()),
         })

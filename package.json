@@ -38,6 +38,8 @@
     "sequelize": "^6.31.1",
     "socket.io": "^4.6.1",
     "sqlite3": "^5.1.6",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3",
     "twilio": "^4.11.1",
     "uuid": "^9.0.0",
     "winston": "^3.9.0"

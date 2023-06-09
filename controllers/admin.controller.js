@@ -31,9 +31,7 @@ const all_information = async (req, res) => {
             message:'all movies data',
             data: user
         })
-        //{"level":"error","message":"undefined - /users/movies - GET - ::1","timestamp":"2023-06-07T13:23:13.188Z"}
-
-        Logger.authLogger.info(`Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip}`)
+        Logger.authLogger.info(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     } catch (error) {
         res.status(500).send({
             is_error: true,
@@ -41,7 +39,8 @@ const all_information = async (req, res) => {
             message: 'Internal server error',
             data: null
         })
-        Logger.authLogger.error(`Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip}`)
+        console.log(res)
+        Logger.authLogger.error(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     }
 }
 

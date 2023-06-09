@@ -4,8 +4,10 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD,
     {
         host: config.HOST,
         dialect: config.DIALECT,
-        port: config.PORT
-    })
+        port: config.PORT,
+        // logging: false
+    },    
+    )
 
 const testDbConnection = async () => {
     try {

@@ -19,7 +19,7 @@ const Logger = require('./logger.controller')
 
 
 
-//signup controller
+
 const signup = async (req, res) => {
     try {
         const existingUser = await Users.findOne({
@@ -30,12 +30,13 @@ const signup = async (req, res) => {
         if (!existingUser) {
             const { error } = validateSignup(req.body)
             if (error) {
-                Logger.authLogger.log('error', 'Validation Error "singup"',)
-                return res.status(200).send({
+                res.status(200).send({
                     is_error: true,
                     statusCode: 406,
                     message: error.details[0].message
                 })
+                console.log(req.ip)
+                Logger.authLogger.error(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
             } else {
                 await Users.create(req.body)
                 const user = await Users.findOne({
@@ -45,22 +46,22 @@ const signup = async (req, res) => {
                     },
                     raw: true
                 })
-                Logger.authLogger.log('info', 'User create Successfully')
-                return res.status(201).send({
+                res.status(201).send({
                     is_error: false,
                     statusCode: 201,
                     message: 'user created',
                     data: user
                 })
+                Logger.authLogger.info(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
             }
         } else {
-            Logger.authLogger.log('info', 'User Already Exists','')
             res.status(200).send(utils.useralready)
+            Logger.authLogger.error(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         }
     } catch (error) {
         console.log(error)
-        Logger.authLogger.log('error', 'Internal Server Error')
-        return res.status(500).send(utils.catchObje)
+        res.status(500).send(utils.catchObje)
+        Logger.authLogger.error(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     }
 }
 
@@ -70,12 +71,12 @@ const login = async (req, res) => {
     try {
         const { error } = validateLogin(req.body)
         if (error) {
-            Logger.authLogger.log('error', 'Validation Error "login"')
-            return res.status(200).send({
+            res.status(200).send({
                 is_error: true,
                 statusCode: 406,
                 message: error.details[0].message
             })
+            Logger.authLogger.error(`message-${error.details[0].message} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         } else {
             const user = await Users.findOne({
                 where: {
@@ -106,27 +107,27 @@ const login = async (req, res) => {
                     }
                 })
                 //login response
-                Logger.authLogger.log('info', 'User login Successfully "login"')
-                return res.status(200).send({
+                 res.status(200).send({
                     is_error: false,
                     statusCode: 200,
                     message: 'login successfully',
                     data: User,
                     token: token
                 })
+                Logger.authLogger.info(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
             } else {
-                Logger.authLogger.log('error', 'Wrong Password "login"')
-                return res.status(200).send({
+                 res.status(200).send({
                     is_error: true,
                     statusCode: 403,
                     message: 'wrong password',
                     data: null,
                 })
+                Logger.authLogger.error(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
             }
         }
     } catch (error) {
-        Logger.authLogger.log('error', 'Internal Server Error "login"')
-        return res.status(500).send(utils.catchObje)
+        res.status(500).send(utils.catchObje)
+        Logger.authLogger.error(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     }
 }
 //forgot controller using mobile
@@ -137,12 +138,12 @@ const forgotpasswordMoible = async (req, res) => {
         })
         const error = userschema.validate(req.body).error
         if (error) {
-            Logger.authLogger.log('error', 'Validation Error')
-            return res.status(200).send({
+             res.status(200).send({
                 is_error: true,
                 statusCode: 406,
                 message: error.details[0].message
             })
+            Logger.authLogger.error(`message-${error.details[0].message} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         } else {
             const contact = await Users.findOne({
                 contact_no: req.body.contact_no
@@ -184,12 +185,12 @@ const forgotpassword = async (req, res) => {
     try {
         const { error } = validateForgotpassword(req.body)
         if (error) {
-            Logger.authLogger.log('error', 'Validation Error "forgotpassword"')
-            return res.status(200).send({
+            res.status(200).send({
                 is_error: true,
                 statusCode: 406,
                 message: error.details[0].message
             })
+            Logger.authLogger.error(`message-${error.details[0].message} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         } else {
             const user = await Users.findOne({
                 where: {
@@ -231,23 +232,23 @@ const forgotpassword = async (req, res) => {
 
             mailTransporter.sendMail(mailDetails, function (err, data) {
                 if (err) {
-                    Logger.authLogger.log('error', 'Email is not Sended "forgotpassword"')
+                    Logger.authLogger.info(`message-${req.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
                     console.log(err)
                 } else {
                     console.log(data)
                 }
             })
-            Logger.authLogger.log('info', 'Otp Sended By Your Email "forgotpassword"')
-            return res.status(200).send({
+             res.status(200).send({
                 is_error: false,
                 statusCode: 200,
                 message: 'Otp sended',
                 Otp: otp
             })
+            Logger.authLogger.info(`message-${req.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         }
     } catch (error) {
-        Logger.authLogger.log('error', 'Internal Server Error "forgotpassword"')
-        return res.status(500).send(utils.catchObje)
+        res.status(500).send(utils.catchObje)
+        Logger.authLogger.error(`message-${req.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     }
 }
 
@@ -256,12 +257,12 @@ const resetpassword = async (req, res) => {
     try {
         const { error } = validateResetpassword(req.body)
         if (error) {
-            Logger.authLogger.log('error', 'Validation Error "resetpassword"')
-            return res.status(200).send({
+             res.status(200).send({
                 is_error: true,
                 statuscode: 404,
                 message: error.details[0].message
             })
+            Logger.authLogger.error(`message-${error.details[0].message} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         } else {
             const user = await Users.findOne({
                 where: {
@@ -269,12 +270,12 @@ const resetpassword = async (req, res) => {
                 }
             })
             if (!user) {
-                Logger.authLogger.log('error', 'user is not exist "resetpassword"')
-                return res.status(400).send({
+                res.status(400).send({
                     is_error: false,
                     statusCode: 404,
                     message: 'user is not exist',
                 })
+                Logger.authLogger.error(`message-${req.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
             } else {
                 if (req.body.otp === user.otp) {
                     //new password in hash convert
@@ -284,25 +285,25 @@ const resetpassword = async (req, res) => {
                             email: req.body.email
                         }
                     })
-                    Logger.authLogger.log('info', 'Password Changed Successfully "resetpassword"')
-                    return res.status(200).send({
+                    res.status(200).send({
                         is_error: false,
                         statusCode: 200,
                         message: 'password changed'
                     })
+                    Logger.authLogger.info(`message-${req.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
                 } else {
-                    Logger.authLogger.log('error', 'Otp is Not Matched "resetpassword"')
-                    return res.status(400).send({
+                    res.status(400).send({
                         is_error: false,
                         statusCode: 404,
                         message: 'Otp is not match'
                     })
+                    Logger.authLogger.error(`message-${req.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
                 }
             }
         }
     } catch (error) {
-        Logger.authLogger.log('error', 'Internal Server Error "resetpassword"')
-        return res.status(500).send(utils.catchObje)
+        res.status(500).send(utils.catchObje)
+        Logger.authLogger.error(`message-${req.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     }
 }
 
@@ -376,7 +377,7 @@ const dashboard = async (req, res) => {
             message: messagearray
         })
     } catch (error) {
-        Logger.authLogger.log('error', 'Internal Server Error "dashboard"')
+        Logger.authLogger.error(`message-${req.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         console.log(error)
         res.send({
             message: error.message
@@ -388,7 +389,7 @@ const cronJob = async () => {
     try {
         cron.schedule('*/10 * * * * *', dashboard(req, res));
     } catch (error) {
-        Logger.authLogger.log('error', 'Internal Server Error "cronJob"')
+        Logger.authLogger.error(`message-${req.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         console.log(error)
     }
 }
@@ -399,7 +400,7 @@ const Dashboard = async () => {
             dashboard(req, res)
         })
     } catch (error) {
-        Logger.authLogger.log('error', 'Internal Server Error"Dashboard"')
+        Logger.authLogger.error(`message-${req.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         console.log(error)
     }
 }

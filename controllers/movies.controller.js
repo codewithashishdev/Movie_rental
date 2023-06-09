@@ -13,29 +13,29 @@ const add_movie = async (req, res) => {
     try {
         const { error } = validateAddMovie(req.body)
         if (error) {
-            Logger.authLogger.log('error', 'Validation Error "add_movie"')
-            return res.status(200).send({
+            res.status(200).send({
                 is_error: true,
                 message: error.details[0].message
             })
+            Logger.authLogger.error(`message-${error.details[0].message} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         } else {
             const data = req.body
             data.movie_title = `${process.env.URL}/movie/Movie_title/${req.file.filename}`
             const movie = await Movies.create(data)
-            Logger.authLogger.log('info', 'Movie Created Successfully "add_movie"')
-            return res.status(201).send({
+            res.status(201).send({
                 is_error: false,
                 message: 'movie created',
                 data: movie
             })
+            Logger.authLogger.info(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         }
     } catch (error) {
         console.log(error)
-        Logger.authLogger.log('error', 'Internal Server Error "add_movie"')
-        return res.status(500).send({
+        res.status(500).send({
             is_error: true,
             message: 'Internal server error'
         })
+        Logger.authLogger.error(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     }
 }
 
@@ -46,19 +46,19 @@ const get_movie = async (req, res) => {
         const movies = await Movies.findAll({
             attributes: ['id', 'movie_name', 'release_date', 'genre', 'price', 'quantity', 'movie_title']
         })
-        Logger.authLogger.log('info', 'All Movie "get_movie"')
-        return res.status(200).send({
+        res.status(200).send({
             is_error: false,
             message: 'all movie here',
             data: movies
         })
+        Logger.authLogger.info(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     } catch (error) {
         console.log(error)
-        Logger.authLogger.log('error', 'Internal Server Error "get_movie"')
-        return res.status(500).send({
+        res.status(500).send({
             is_error: true,
             message: 'Internal server error'
         })
+        Logger.authLogger.error(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     }
 }
 //get movie by id 
@@ -66,11 +66,11 @@ const movieBy_id = async (req, res) => {
     try {
         id = req.params.id
         if (!id) {
-            Logger.authLogger.log('error', 'Id is Require "movieBy_id"')
-            return res.status(500).send({
+            res.status(500).send({
                 is_error: true,
                 message: 'id is require'
             })
+            Logger.authLogger.error(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         } else {
             const movie = await Movies.findOne({
                 attributes: ['id', 'movie_name', 'release_date', 'genre', 'price', 'quantity', 'movie_title'],
@@ -78,20 +78,20 @@ const movieBy_id = async (req, res) => {
                     id: id
                 }
             })
-            Logger.authLogger.log('info', 'movie "movieBy_id"')
-            return res.status(200).send({
+            res.status(200).send({
                 is_error: true,
                 data: movie
             })
+            Logger.authLogger.info(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
         }
 
     } catch (error) {
         console.log(error)
-        Logger.authLogger.log('error', 'Internal Server Error "movieBy_id"')
-        return res.status(500).send({
+        res.status(500).send({
             is_error: true,
             message: 'Internal server error'
         })
+        Logger.authLogger.info(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     }
 }
 

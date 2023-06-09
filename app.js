@@ -21,11 +21,12 @@ const googleRouter = require('./routes/google.auth.router')
 const roleRouter = require('./routes/role.route')
 const permisionRouter = require('./routes/permission.route')
 const treeRouter = require('./routes/tree.router')
+const swaggerSetup = require('./swagger');
 
 // middleware  Set up
 app.use(cors()); // CORS middleware for cross-origin requests
 app.use(express.json()); // Parse JSON request bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
+app.use(express.urlencoded({ extended: false })); // Parse URL-encoded request bodies
 app.set('view engine','ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'YOUR_SESSION_SECRET', resave: false, saveUninitialized: false }));
@@ -36,8 +37,9 @@ let server = http.createServer(app)
 // Initialize Passport and restore authentication state, if any, from the session
 app.use(passport.initialize());
 app.use(passport.session());
+swaggerSetup(app)
 
-//route
+
 app.use('/', authRouter);
 app.use('/api', googleRouter);
 app.use('/users', usersRouter);

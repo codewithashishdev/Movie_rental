@@ -37,7 +37,7 @@ const validateResetpassword = (data) =>{
     let userschema = Joi.object().keys({
         email: Joi.string().email().required(),
         otp: Joi.string().required(),
-        new_password: Joi.number().required()
+        new_password: Joi.string().required()
     })
     return userschema.validate(data)
 }
