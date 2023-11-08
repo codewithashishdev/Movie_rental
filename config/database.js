@@ -1,7 +1,7 @@
 console.log(process.env.HOST)
 module.exports = {
     HOST: process.env.HOST,
-    USER: process.env.USER,
+    USER: process.env.X,
     PASSWORD: process.env.PASSWORD,
     DB: process.env.DB,
     DIALECT: process.env.DIALECT,

@@ -13,7 +13,6 @@ router.post('/signup',loginController.signup)
 //login api
 router.post('/login',loginController.login)
 
-//login api
 //forgotpassowrd using mobile
 router.post('/mobil-forgotpassword',loginController.forgotpasswordMoible)
 

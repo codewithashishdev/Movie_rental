@@ -5,6 +5,9 @@
   "scripts": {
     "start": "nodemon app.js"
   },
+  "engines": {
+    "node": "19.9.0"
+  },
   "dependencies": {
     "accesscontrol": "^2.2.1",
     "bcrypt": "^5.1.0",
