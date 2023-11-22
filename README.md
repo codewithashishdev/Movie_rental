@@ -1,5 +1,4 @@
 # Movie_rental
-<summary></summary>
 ### movie-rentel Admin Dashboard
 > [!NOTE]
 > This are all API back-end APIs
