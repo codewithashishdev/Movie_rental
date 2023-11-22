@@ -1,5 +1,8 @@
 # Movie_rental
 ### movie-rentel Admin Dashboard
+> [!APIS]
+> Highlights information that users should take into account, even when skimming.
+
 1. Getting Started
 
     a. To get country code list.\
@@ -9,3 +12,6 @@
 
     a. To login with mobile number and password.\
           API : [BaseUrl]/userAuthentication/login
+
+
+
