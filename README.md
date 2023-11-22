@@ -1,5 +1,7 @@
 # Movie_rental
 ### movie-rentel Admin Dashboard
+<details open>
+<summary>Shopping list</summary>
 > [!NOTE]
 > This are all API back-end APIs
 
@@ -12,6 +14,8 @@
 
     a. To login with mobile number and password.\
           API : [BaseUrl]/userAuthentication/login
+
+</details>
 ### movie-rentel Admin Dashboard
 - [x] #739
 - [ ] https://github.com/octo-org/octo-repo/issues/740
