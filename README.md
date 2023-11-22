@@ -1,6 +1,6 @@
 # Movie_rental
 ### movie-rentel Admin Dashboard
-> [!APIS]
+> [!NOTE]
 > Highlights information that users should take into account, even when skimming.
 
 1. Getting Started
