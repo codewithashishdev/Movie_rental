@@ -2,11 +2,10 @@
 ### movie-rentel Admin Dashboard
 <details open>
 <summary>APIs </summary>
-
-1. Getting Started
-
+<details><summary>1. Getting Started</summary>
     a. To get country code list.\
            API : [BaseUrl]/authentication/signup
+           </details>
 
 2. Login Screen
 
