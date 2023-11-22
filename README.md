@@ -1,7 +1,6 @@
 # Movie_rental
 ### movie-rentel Admin Dashboard
-> [!NOTE]
-> This are all API back-end APIs
+> [!NOTE] > This are all API back-end APIs
 
 1. Getting Started
 
