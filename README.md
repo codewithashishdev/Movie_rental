@@ -4,7 +4,7 @@
 <summary>APIs </summary>
 1. Getting Started
     a. To get country code list.\
-           API : [BaseUrl]/authentication/signup
+          API : [BaseUrl]/authentication/signup
 
 2. Login Screen
 
