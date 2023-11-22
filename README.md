@@ -1,6 +1,7 @@
 # Movie_rental
 ### movie-rentel Admin Dashboard
-> Highlights information that users should take into account, even when skimming.
+> [!NOTE]
+> This are all API back-end APIs
 
 1. Getting Started
 
