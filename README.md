@@ -1,6 +1,5 @@
 # Movie_rental
-this is pr file for source code
-movie-rentel Admin Dashboard
+### movie-rentel Admin Dashboard
 1. Getting Started
 
     a. To get country code list.\
