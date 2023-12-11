@@ -40,4 +40,5 @@
 |  [twilio](https://www.npmjs.com/package/twilio)                                               | 4.11.1 (Latest: 4.19.3)                   |
 |  [uuid](https://www.npmjs.com/package/uuid)                                                   | 9.0.0 (Latest: 9.0.1)                     |
 |  [winston](https://www.npmjs.com/package/winston)                                             | 3.9.0 (Latest: 3.11.0)                    |
-</details>details>
+  
+</details>
