@@ -1,6 +1,7 @@
 # My Project
 <details open>
 <summary>This is a project with the following dependencies:</summary>
+  
 | Package Name                                                                                  | Current Version ( Latest Version)         | 
 |-----------------------------------------------------------------------------------------------|-------------------------------------------|
 |  [accesscontrol](https://www.npmjs.com/package/accesscontrol)                                 | 2.2.1 (Latest: 2.2.1)                     |
