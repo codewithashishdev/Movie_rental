@@ -1,8 +1,42 @@
-# Movie_rental
-<<<<<<< HEAD
-this is pr file for source code
+# My Project
 
-this is file rexcger
-=======
-project dependencies:
->>>>>>> b9647444843266378d92cb25ba171c751328a600
+This is a project with the following dependencies:
+
+- [accesscontrol](https://www.npmjs.com/package/accesscontrol): 2.2.1 (Latest: 2.2.1) [npm](https://www.npmjs.com/package/accesscontrol)
+- [bcrypt](https://www.npmjs.com/package/bcrypt): 5.1.0 (Latest: 5.1.1) [npm](https://www.npmjs.com/package/bcrypt)
+- [body-parser](https://www.npmjs.com/package/body-parser): 1.20.2 (Latest: 1.20.2) [npm](https://www.npmjs.com/package/body-parser)
+- [cookie-parser](https://www.npmjs.com/package/cookie-parser): 1.4.6 (Latest: 1.4.6) [npm](https://www.npmjs.com/package/cookie-parser)
+- [cookie-session](https://www.npmjs.com/package/cookie-session): 2.0.0 (Latest: 2.0.0) [npm](https://www.npmjs.com/package/cookie-session)
+- [cors](https://www.npmjs.com/package/cors): 2.8.5 (Latest: 2.8.5) [npm](https://www.npmjs.com/package/cors)
+- [debug](https://www.npmjs.com/package/debug): 2.6.9 (Latest: 4.3.4) [npm](https://www.npmjs.com/package/debug)
+- [dotenv](https://www.npmjs.com/package/dotenv): 16.0.3 (Latest: 16.3.1) [npm](https://www.npmjs.com/package/dotenv)
+- [ejs](https://www.npmjs.com/package/ejs): 3.1.9 (Latest: 3.1.9) [npm](https://www.npmjs.com/package/ejs)
+- [express](https://www.npmjs.com/package/express): 4.16.4
+4.6.3 (Latest: 4.18.2) [npm](https://www.npmjs.com/package/express)
+- [express-fileupload](https://www.npmjs.com/package/express-fileupload): 1.4.0 (Latest: 1.4.3) [npm](https://www.npmjs.com/package/express-fileupload)
+- [express-session](https://www.npmjs.com/package/express-session): 1.17.3 (Latest: 1.17.3) [npm](https://www.npmjs.com/package/express-session)
+- [google-auth-library](https://www.npmjs.com/package/google-auth-library): 8.8.0 (Latest: 9.4.1) [npm](https://www.npmjs.com/package/google-auth-library)
+- [googleapis](https://www.npmjs.com/package/googleapis): 118.0.0 (Latest: 129.0.0) [npm](https://www.npmjs.com/package/googleapis)
+- [helmet](https://www.npmjs.com/package/helmet): 7.0.0 (Latest: 7.1.0) [npm](https://www.npmjs.com/package/helmet)
+- [http](https://www.npmjs.com/package/http): 0.0.1-security (Latest: 0.0.1-security) [npm](https://www.npmjs.com/package/http)
+- [joi](https://www.npmjs.com/package/joi): 17.9.2 (Latest: 17.11.0) [npm](https://www.npmjs.com/package/joi)
+- [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken): 9.0.0 (Latest: 9.0.2) [npm](https://www.npmjs.com/package/jsonwebtoken)
+- [morgan](https://www.npmjs.com/package/morgan): 1.9.1 (Latest: 1.10.0) [npm](https://www.npmjs.com/package/morgan)
+- [multer](https://www.npmjs.com/package/multer): 1.4.5-lts.1 (Latest: 1.4.5-lts.1) [npm](https://www.npmjs.com/package/multer)
+- [mysql](https://www.npmjs.com/package/mysql): 2.18.1 (Latest: 2.18.1) [npm](https://www.npmjs.com/package/mysql)
+- [mysql2](https://www.npmjs.com/package/mysql2): 3.2.4 (Latest: 3.6.5) [npm](https://www.npmjs.com/package/mysql2)
+- [node-cron](https://www.npmjs.com/package/node-cron): 3.0.2 (Latest: 3.0.3) [npm](https://www.npmjs.com/package/node-cron)
+- [nodemailer](https://www.npmjs.com/package/nodemailer): 6.9.1 (Latest: 6.9.7) [npm](https://www.npmjs.com/package/nodemailer)
+- [otp-generator](https://www.npmjs.com/package/otp-generator): 4.0.1 (Latest: 4.0.1) [npm](https://www.npmjs.com/package/otp-generator)
+- [passport](https://www.npmjs.com/package/passport): 0.6.0 (Latest: 0.7.0) [npm](https://www.npmjs.com/package/passport)
+- [passport-google-oauth20](https://www.npmjs.com/package/passport-google-oauth20): 2.0.0 (Latest: 2.0.0) [npm](https://www.npmjs.com/package/passport-google-oauth20)
+- [path](https://www.npmjs.com/package/path): 0.12.7 (Latest: 0.12.7) [npm](https://www.npmjs.com/package/path)
+- [pg](https://www.npmjs.com/package/pg): 8.10.0 (Latest: 8.11.3) [npm](https://www.npmjs.com/package/pg)
+- [sequelize](https://www.npmjs.com/package/sequelize): 6.31.1 (Latest: 6.35.1) [npm](https://www.npmjs.com/package/sequelize)
+- [socket.io](https://www.npmjs.com/package/socket.io): 4.6.1 (Latest: 4.7.2) [npm](https://www.npmjs.com/package/socket.io)
+- [sqlite3](https://www.npmjs.com/package/sqlite3): 5.1.6 (Latest: 5.1.6) [npm](https://www.npmjs.com/package/sqlite3)
+- [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc): 6.2.8 (Latest: 6.2.8) [npm](https://www.npmjs.com/package/swagger-jsdoc)
+- [swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express): 4.6.3 (Latest: 5.0.0) [npm](https://www.npmjs.com/package/swagger-ui-express)
+- [twilio](https://www.npmjs.com/package/twilio): 4.11.1 (Latest: 4.19.3) [npm](https://www.npmjs.com/package/twilio)
+- [uuid](https://www.npmjs.com/package/uuid): 9.0.0 (Latest: 9.0.1) [npm](https://www.npmjs.com/package/uuid)
+- [winston](https://www.npmjs.com/package/winston): 3.9.0 (Latest: 3.11.0) [npm](https://www.npmjs.com/package/winston)
