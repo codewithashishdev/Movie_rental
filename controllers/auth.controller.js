@@ -19,7 +19,6 @@ const Logger = require('./logger.controller')
 
 
 
-
 const signup = async (req, res) => {
     try {
         const existingUser = await Users.findOne({
@@ -130,11 +129,12 @@ const login = async (req, res) => {
         Logger.authLogger.error(`message-${res.statusMessage} Url-${req.originalUrl} -Method ${req.method} Ip- ${req.ip},bowser - ${req.headers['user-agent']}`)
     }
 }
+
 //forgot controller using mobile
 const forgotpasswordMoible = async (req, res) => {
     try {
         let userschema = Joi.object().keys({
-            contact_no: Joi.number().required()
+            contact_no: Joi.number().required()//error review
         })
         const error = userschema.validate(req.body).error
         if (error) {
