@@ -10,8 +10,10 @@ const multer = require('multer')
 const passport = require('passport')
 const path = require('path');
 const app = express(); // Express app
+
 // const cron = require('./cron.js')
 const socketIO = require('socket.io');
+
 //router files
 const usersRouter = require('./routes/users.router');
 const authRouter = require('./routes/authantication.router')
